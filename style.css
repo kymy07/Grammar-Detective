@@ -1,0 +1,139 @@
+/* ============================================================
+   GRAMMAR DETECTIVE — Global Shared Styles
+   style.css
+   ============================================================
+   Contains: fonts, CSS vars, reset, nav, buttons, footer
+   Do NOT put page-specific styles here.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800;900&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+/* ---- CSS Variables ---- */
+:root {
+  --beige:    #D4A96A;
+  --beige-lt: #E8C99A;
+  --tan:      #F5E6D0;
+  --tan-dark: #EDD5B0;
+  --offwhite: #FDFAF5;
+  --white:    #FFFFFF;
+  --brown:    #8B6340;
+  --dark:     #3A2E20;
+
+  --teal:     #5BB8B0;
+  --teal-dk:  #3D9990;
+  --orange:   #F4854A;
+  --yellow:   #F5C842;
+  --pink:     #E8638A;
+  --purple:   #9B6FD4;
+  --green:    #5BAE6A;
+  --red:      #E04B4B;
+  --blue:     #4E85D4;
+
+  --shadow-sm:  0 3px 10px rgba(0,0,0,0.10);
+  --shadow-md:  0 6px 20px rgba(0,0,0,0.13);
+  --shadow-lg:  0 10px 36px rgba(0,0,0,0.18);
+  --radius-sm:  12px;
+  --radius-md:  18px;
+  --radius-lg:  24px;
+}
+
+/* ---- Reset ---- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--beige);
+  color: var(--dark);
+  min-height: 100vh;
+}
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+
+/* ---- NAVBAR ---- */
+.gd-nav {
+  background: var(--brown);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+.nav-logo {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--yellow);
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.nav-logo span { color: var(--tan); }
+.nav-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.nav-user  { color: rgba(255,255,255,0.75); font-weight: 700; font-size: 0.88rem; white-space: nowrap; }
+
+/* ---- BUTTONS (shared) ---- */
+.btn {
+  display: inline-block;
+  padding: 9px 22px;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+  text-align: center;
+  white-space: nowrap;
+}
+.btn-tan    { background: var(--tan);    color: var(--brown); }
+.btn-tan:hover { background: var(--yellow); }
+.btn-yellow { background: var(--yellow); color: var(--dark); }
+.btn-yellow:hover { background: var(--orange); color: #fff; }
+.btn-teal   { background: var(--teal);   color: #fff; }
+.btn-teal:hover { background: var(--teal-dk); transform: translateY(-2px); }
+.btn-orange { background: var(--orange); color: #fff; }
+.btn-orange:hover { background: #d4703a; transform: translateY(-2px); }
+.btn-pink   { background: var(--pink);   color: #fff; }
+.btn-pink:hover { background: #c44d73; transform: translateY(-2px); }
+.btn-blue   { background: var(--blue);   color: #fff; }
+.btn-blue:hover { background: #3a6db8; transform: translateY(-2px); }
+.btn-brown  { background: var(--brown);  color: #fff; }
+.btn-brown:hover { background: var(--dark); }
+.btn-outline-tan {
+  background: transparent;
+  border: 2px solid var(--tan);
+  color: var(--tan);
+}
+.btn-outline-tan:hover { background: var(--tan); color: var(--brown); }
+
+/* ---- FOOTER ---- */
+.gd-footer {
+  background: var(--dark);
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  padding: 18px 20px;
+  font-size: 0.83rem;
+  margin-top: 48px;
+}
+.gd-footer a { color: rgba(255,255,255,0.6); }
+.gd-footer a:hover { color: var(--yellow); }
+
+/* ---- UTILITY ---- */
+.text-center { text-align: center; }
+.mt-sm  { margin-top: 12px; }
+.mt-md  { margin-top: 20px; }
+.mt-lg  { margin-top: 32px; }
+.mb-sm  { margin-bottom: 12px; }
+.mb-md  { margin-bottom: 20px; }
+.mb-lg  { margin-bottom: 32px; }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 600px) {
+  .gd-nav { padding: 10px 16px; }
+  .nav-logo { font-size: 1.15rem; }
+}

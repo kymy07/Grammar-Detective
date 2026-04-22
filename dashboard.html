@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Detective — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Page background ── */
+    body { background: var(--tan); }
+
+    /* ── Hero banner ── */
+    .dash-hero {
+      background: var(--brown);
+      padding: 40px 36px 48px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    /* decorative circles */
+    .dash-hero::before,
+    .dash-hero::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.08;
+    }
+    .dash-hero::before {
+      width: 300px; height: 300px;
+      background: var(--yellow);
+      top: -80px; right: -60px;
+    }
+    .dash-hero::after {
+      width: 180px; height: 180px;
+      background: var(--teal);
+      bottom: -60px; left: 40px;
+    }
+
+    .hero-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 30px;
+      padding: 5px 14px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      color: var(--tan);
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+    .dash-hero h2 {
+      font-family: 'Baloo 2', cursive;
+      font-size: 2.3rem;
+      font-weight: 900;
+      line-height: 1.2;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+    .dash-hero h2 .hi { color: var(--yellow); }
+    .dash-hero p {
+      color: rgba(255,255,255,0.65);
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 28px;
+    }
+
+    /* Progress bar */
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      max-width: 500px;
+      flex-wrap: wrap;
+    }
+    .dash-progress-wrap {
+      flex: 1;
+      background: rgba(255,255,255,0.15);
+      border-radius: 20px;
+      height: 12px;
+      min-width: 140px;
+      overflow: hidden;
+    }
+    .dash-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), var(--yellow));
+      border-radius: 20px;
+      transition: width 0.7s ease;
+    }
+    .dash-progress-label {
+      color: rgba(255,255,255,0.65);
+      font-size: 0.85rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    /* ── Section heading ── */
+    .section-heading {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--brown);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 0 24px;
+      margin: 32px 0 10px;
+      max-width: 908px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Activity grid ── */
+    .dash-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      padding: 0 24px 48px;
+      max-width: 908px;
+      margin: 0 auto;
+    }
+
+    /* ── Activity card ── */
+    .dash-card {
+      background: var(--white);
+      border-radius: var(--radius-md);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      text-decoration: none;
+      color: inherit;
+      border-left: 5px solid transparent;
+      transition: transform 0.22s, box-shadow 0.22s;
+      position: relative;
+      overflow: hidden;
+    }
+    .dash-card::after {
+      content: '→';
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      color: var(--beige);
+      transition: right 0.2s, color 0.2s;
+    }
+    .dash-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+    .dash-card:hover::after {
+      right: 12px;
+      color: var(--brown);
+    }
+
+    .dash-card-icon {
+      font-size: 2.6rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+    .dash-card-info { flex: 1; min-width: 0; }
+    .dash-card-title {
+      font-family: 'Baloo 2', cursive;
+      font-size: 1.05rem;
+      font-weight: 900;
+      color: var(--dark);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .dash-card-status {
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .st-new  { color: var(--orange); }
+    .st-done { color: var(--green); }
+
+    /* Card number pip */
+    .card-num {
+      position: absolute;
+      top: 10px;
+      right: 32px;
+      font-family: 'Baloo 2', cursive;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: var(--beige-lt);
+      letter-spacing: 0.5px;
+    }
+
+    /* ── Stats row ── */
+    .stats-row {
+      display: flex;
+      gap: 14px;
+      padding: 0 24px;
+      max-width: 908px;
+      margin: 0 auto 24px;
+      flex-wrap: wrap;
+    }
+    .stat-pill {
+      background: var(--white);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-family: 'Baloo 2', cursive;
+      font-weight: 900;
+      font-size: 0.88rem;
+      color: var(--brown);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .stat-pill span { color: var(--teal); font-size: 1.05rem; }
+
+    /* ── Footer override to match design ── */
+    .gd-footer { margin-top: 0; }
+
+    /* ── Responsive ── */
+    @media (max-width: 600px) {
+      .dash-hero { padding: 28px 20px 36px; }
+      .dash-hero h2 { font-size: 1.75rem; }
+      .dash-grid { padding: 0 14px 40px; gap: 12px; }
+      .section-heading { padding: 0 14px; }
+      .stats-row { padding: 0 14px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Nav injected by auth.js -->
+<nav class="gd-nav" id="gd-nav"></nav>
+
+<!-- ── Hero ── -->
+<div class="dash-hero">
+  <div class="hero-inner">
+    <div class="hero-badge">🕵️ Grammar Detective</div>
+    <h2>Hello, <span class="hi" id="d-name">Detective</span>!</h2>
+    <p id="d-sub">Ready for today's grammar adventure? Let's go!</p>
+    <div class="progress-row">
+      <div class="dash-progress-wrap">
+        <div class="dash-progress-bar" id="d-bar" style="width:0%;"></div>
+      </div>
+      <div class="dash-progress-label" id="d-progress-label">Loading…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Stats pills ── -->
+<div class="stats-row" id="stats-row" style="margin-top:24px;">
+  <div class="stat-pill"><span>📚</span> 5 Activities</div>
+  <div class="stat-pill"><span id="done-count">⭐</span> <span id="done-label">0 Completed</span></div>
+</div>
+
+<!-- ── Activity cards ── -->
+<p class="section-heading">📚 Your Activities</p>
+<div class="dash-grid">
+
+  <a href="activity1.html" class="dash-card" style="border-color:var(--teal);" id="card-act1">
+    <div class="dash-card-icon">🍎</div>
+    <div class="dash-card-info">
+      <div class="dash-card-title">Countable &amp; Uncountable</div>
+      <div class="dash-card-status st-new" id="s-act1">● Not started</div>
+    </div>
+    <div class="card-num">01</div>
+  </a>
+
+  <a href="activity2.html" class="dash-card" style="border-color:var(--purple);" id="card-act2">
+    <div class="dash-card-icon">🐝</div>
+    <div class="dash-card-info">
+      <div class="dash-card-title">Collective Nouns</div>
+      <div class="dash-card-status st-new" id="s-act2">● Not started</div>
+    </div>
+    <div class="card-num">02</div>
+  </a>
+
+  <a href="activity3.html" class="dash-card" style="border-color:var(--orange);" id="card-act3">
+    <div class="dash-card-icon">📝</div>
+    <div class="dash-card-info">
+      <div class="dash-card-title">Singular &amp; Plural</div>
+      <div class="dash-card-status st-new" id="s-act3">● Not started</div>
+    </div>
+    <div class="card-num">03</div>
+  </a>
+
+  <a href="activity4.html" class="dash-card" style="border-color:var(--blue);" id="card-act4">
+    <div class="dash-card-icon">🙋</div>
+    <div class="dash-card-info">
+      <div class="dash-card-title">Personal Pronouns</div>
+      <div class="dash-card-status st-new" id="s-act4">● Not started</div>
+    </div>
+    <div class="card-num">04</div>
+  </a>
+
+  <a href="activity5.html" class="dash-card" style="border-color:var(--pink);" id="card-act5">
+    <div class="dash-card-icon">🏆</div>
+    <div class="dash-card-info">
+      <div class="dash-card-title">Possessive Adjectives</div>
+      <div class="dash-card-status st-new" id="s-act5">● Not started</div>
+    </div>
+    <div class="card-num">05</div>
+  </a>
+
+</div>
+
+<footer class="gd-footer">
+  © 2024 Grammar Detective ·
+  <a href="index.html">Home</a>
+</footer>
+
+<script src="auth.js"></script>
+<script>
+  GD.requireAuth(true);
+
+  const ACTS = ['act1','act2','act3','act4','act5'];
+
+  function loadDashboard() {
+    const user = GD.getCurrent();
+    document.getElementById('d-name').textContent = user.name.split(' ')[0];
+
+    const scores     = GD.getScores();
+    const userScores = scores[user.username] || {};
+
+    let done = 0;
+    ACTS.forEach(id => {
+      const el = document.getElementById('s-' + id);
+      if (userScores[id]) {
+        done++;
+        const s = userScores[id];
+        el.textContent = '✅ Done — ' + s.label;
+        el.className = 'dash-card-status st-done';
+      } else {
+        el.textContent = '● Not started';
+        el.className = 'dash-card-status st-new';
+      }
+    });
+
+    // Progress bar
+    const pct = Math.round(done / ACTS.length * 100);
+    document.getElementById('d-bar').style.width = pct + '%';
+    document.getElementById('d-progress-label').textContent =
+      done + ' / ' + ACTS.length + ' completed (' + pct + '%)';
+
+    // Stats pills
+    document.getElementById('done-count').textContent = done > 0 ? '⭐'.repeat(Math.min(done, 3)) : '⭐';
+    document.getElementById('done-label').textContent = done + ' Completed';
+
+    // All done message
+    if (done === ACTS.length) {
+      document.getElementById('d-sub').textContent =
+        '🏆 Wow! You completed ALL activities! You\'re a real Grammar Detective!';
+    }
+  }
+
+  loadDashboard();
+</script>
+</body>
+</html>

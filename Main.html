@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grammar Detective</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --yellow: #FFD93D;
+    --orange: #FF8C42;
+    --teal: #2EC4B6;
+    --purple: #9B5DE5;
+    --pink: #F72585;
+    --blue: #4361EE;
+    --green: #06D6A0;
+    --red: #EF233C;
+    --dark: #1a1a2e;
+    --card-bg: #fff;
+    --shadow: 0 8px 32px rgba(0,0,0,0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #f0f4ff; min-height: 100vh; }
+
+  /* ===== NAV ===== */
+  nav {
+    background: var(--dark);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.3);
+  }
+  .nav-logo { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--yellow); letter-spacing: 1px; cursor: pointer; }
+  .nav-logo span { color: var(--teal); }
+  .nav-btns { display: flex; gap: 12px; }
+  .btn { padding: 9px 22px; border: none; border-radius: 30px; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: all 0.2s; }
+  .btn-outline { background: transparent; border: 2px solid var(--yellow); color: var(--yellow); }
+  .btn-outline:hover { background: var(--yellow); color: var(--dark); }
+  .btn-primary { background: var(--yellow); color: var(--dark); }
+  .btn-primary:hover { background: var(--orange); color: #fff; transform: translateY(-2px); }
+
+  /* ===== PAGES ===== */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== HOMEPAGE ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--dark) 0%, #16213e 50%, #0f3460 100%);
+    min-height: 92vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 40px 20px; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(46,196,182,0.15) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(255,217,61,0.12) 0%, transparent 60%);
+  }
+  .hero-badge {
+    background: var(--yellow); color: var(--dark);
+    padding: 6px 20px; border-radius: 30px; font-weight: 800; font-size: 0.85rem;
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 20px;
+    display: inline-block; position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(3rem, 8vw, 6rem);
+    color: #fff; line-height: 1.1; margin-bottom: 12px; position: relative; z-index: 1;
+  }
+  .hero h1 .accent { color: var(--yellow); }
+  .hero h1 .accent2 { color: var(--teal); }
+  .hero-sub {
+    font-size: 1.2rem; color: rgba(255,255,255,0.8); max-width: 500px;
+    margin: 0 auto 36px; position: relative; z-index: 1; line-height: 1.6;
+  }
+  .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+  .btn-big { padding: 14px 36px; font-size: 1.1rem; border-radius: 40px; }
+  .btn-teal { background: var(--teal); color: #fff; border: none; }
+  .btn-teal:hover { background: #20a99f; transform: translateY(-3px); box-shadow: 0 8px 24px rgba(46,196,182,0.4); }
+  .btn-ghost { background: transparent; border: 2px solid rgba(255,255,255,0.5); color: #fff; }
+  .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: #fff; transform: translateY(-2px); }
+
+  /* floating shapes */
+  .float-shapes { position: absolute; inset: 0; pointer-events: none; }
+  .shape {
+    position: absolute; border-radius: 50%; opacity: 0.08;
+    animation: floatAnim 6s ease-in-out infinite;
+  }
+  .shape:nth-child(2) { animation-delay: 1s; }
+  .shape:nth-child(3) { animation-delay: 2s; }
+  .shape:nth-child(4) { animation-delay: 3s; }
+  @keyframes floatAnim {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  /* topics strip */
+  .topics-strip { background: var(--yellow); padding: 16px 0; overflow: hidden; }
+  .topics-inner { display: flex; gap: 32px; white-space: nowrap; animation: scroll 18s linear infinite; }
+  .topics-inner span { font-weight: 800; color: var(--dark); font-size: 1rem; text-transform: uppercase; letter-spacing: 1px; }
+  .topics-inner span::before { content: '⭐ '; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* activity cards */
+  .activities-section { padding: 60px 20px; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-family: 'Fredoka One', cursive; font-size: 2.2rem; color: var(--dark); text-align: center; margin-bottom: 8px; }
+  .section-sub { text-align: center; color: #666; margin-bottom: 40px; font-size: 1.05rem; }
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; }
+  .activity-card {
+    background: var(--card-bg); border-radius: 20px; padding: 28px 24px;
+    box-shadow: var(--shadow); cursor: pointer; transition: all 0.3s;
+    border-top: 6px solid transparent; text-align: center; position: relative; overflow: hidden;
+  }
+  .activity-card::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, currentColor 0%, transparent 100%);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .activity-card:hover { transform: translateY(-8px); box-shadow: 0 16px 48px rgba(0,0,0,0.18); }
+  .activity-card.c1 { border-color: var(--teal); }
+  .activity-card.c2 { border-color: var(--purple); }
+  .activity-card.c3 { border-color: var(--orange); }
+  .activity-card.c4 { border-color: var(--blue); }
+  .activity-card.c5 { border-color: var(--pink); }
+  .card-icon { font-size: 3rem; margin-bottom: 16px; }
+  .card-title { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--dark); margin-bottom: 8px; }
+  .card-desc { color: #777; font-size: 0.92rem; line-height: 1.5; margin-bottom: 16px; }
+  .card-tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; }
+  .tag-teal { background: #e0faf8; color: var(--teal); }
+  .tag-purple { background: #f0e6ff; color: var(--purple); }
+  .tag-orange { background: #fff0e6; color: var(--orange); }
+  .tag-blue { background: #e6ecff; color: var(--blue); }
+  .tag-pink { background: #ffe6f3; color: var(--pink); }
+
+  /* credits */
+  .credits-section {
+    background: var(--dark); color: #fff;
+    padding: 60px 20px; text-align: center;
+  }
+  .credits-section h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--yellow); margin-bottom: 40px; }
+  .credits-grid { display: flex; gap: 30px; flex-wrap: wrap; justify-content: center; max-width: 900px; margin: 0 auto 40px; }
+  .credit-card {
+    background: rgba(255,255,255,0.07); border-radius: 18px; padding: 28px 32px;
+    border: 1px solid rgba(255,255,255,0.1); min-width: 260px; flex: 1;
+  }
+  .credit-role { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--teal); font-weight: 700; margin-bottom: 8px; }
+  .credit-name { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: #fff; margin-bottom: 4px; }
+  .credit-detail { color: rgba(255,255,255,0.55); font-size: 0.9rem; }
+  .ages-badge { background: var(--teal); color: #fff; padding: 10px 28px; border-radius: 30px; font-weight: 800; font-size: 1rem; display: inline-block; margin-top: 10px; }
+
+  /* footer */
+  footer { background: #111; color: rgba(255,255,255,0.4); text-align: center; padding: 20px; font-size: 0.85rem; }
+
+  /* ===== AUTH PAGES ===== */
+  .auth-wrapper {
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    background: linear-gradient(135deg, #f0f4ff, #e8f7f5);
+    padding: 40px 20px;
+  }
+  .auth-box {
+    background: #fff; border-radius: 24px; padding: 44px 40px; width: 100%; max-width: 440px;
+    box-shadow: 0 12px 48px rgba(0,0,0,0.12);
+  }
+  .auth-logo { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--dark); text-align: center; margin-bottom: 6px; }
+  .auth-logo .accent { color: var(--teal); }
+  .auth-sub-title { text-align: center; color: #888; margin-bottom: 32px; font-size: 0.95rem; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label { display: block; font-weight: 700; color: var(--dark); margin-bottom: 8px; font-size: 0.95rem; }
+  .form-group input, .form-group select {
+    width: 100%; padding: 13px 16px; border: 2px solid #e8e8f0; border-radius: 12px;
+    font-family: 'Nunito', sans-serif; font-size: 1rem; color: var(--dark);
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none; background: #fafafa;
+  }
+  .form-group input:focus { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(46,196,182,0.15); background: #fff; }
+  .btn-submit {
+    width: 100%; padding: 14px; background: var(--teal); color: #fff; border: none;
+    border-radius: 14px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem;
+    cursor: pointer; transition: all 0.2s; margin-top: 6px;
+  }
+  .btn-submit:hover { background: #20a99f; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,196,182,0.35); }
+  .auth-switch { text-align: center; margin-top: 20px; color: #888; font-size: 0.95rem; }
+  .auth-switch a { color: var(--teal); font-weight: 700; cursor: pointer; text-decoration: none; }
+  .auth-switch a:hover { text-decoration: underline; }
+  .alert { padding: 12px 16px; border-radius: 10px; margin-bottom: 18px; font-size: 0.92rem; font-weight: 600; display: none; }
+  .alert-error { background: #ffe6e6; color: var(--red); border: 1.5px solid #ffb3b3; }
+  .alert-success { background: #e6fff7; color: #00875a; border: 1.5px solid #b3ffe0; }
+
+  /* ===== DASHBOARD ===== */
+  .dashboard { min-height: 100vh; background: #f0f4ff; }
+  .dash-hero {
+    background: linear-gradient(135deg, var(--dark), #16213e);
+    padding: 40px 32px; color: #fff;
+  }
+  .dash-hero h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; }
+  .dash-hero h2 span { color: var(--yellow); }
+  .dash-hero p { color: rgba(255,255,255,0.7); margin-top: 4px; }
+  .progress-bar-wrap { background: rgba(255,255,255,0.15); border-radius: 20px; height: 12px; margin-top: 20px; max-width: 400px; }
+  .progress-bar { height: 100%; background: var(--yellow); border-radius: 20px; transition: width 0.5s; }
+  .progress-label { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 6px; }
+  .dash-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; padding: 32px; max-width: 1100px; margin: 0 auto; }
+  .dash-card {
+    background: #fff; border-radius: 18px; padding: 24px 20px; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08); transition: all 0.3s; border-left: 5px solid transparent;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .dash-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.14); }
+  .dash-card.done { opacity: 0.7; }
+  .dash-card-icon { font-size: 2.5rem; flex-shrink: 0; }
+  .dash-card-title { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--dark); }
+  .dash-card-status { font-size: 0.78rem; color: #aaa; margin-top: 2px; font-weight: 600; }
+  .status-done { color: var(--green) !important; }
+  .status-new { color: var(--orange) !important; }
+
+  /* ===== ACTIVITY PAGE ===== */
+  .activity-page { min-height: 100vh; background: #f0f4ff; }
+  .act-header {
+    padding: 28px 32px; display: flex; align-items: center; gap: 16px;
+    background: #fff; box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .btn-back { background: none; border: 2px solid #ddd; border-radius: 12px; padding: 8px 18px; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; color: #555; transition: all 0.2s; }
+  .btn-back:hover { border-color: var(--teal); color: var(--teal); }
+  .act-title { font-family: 'Fredoka One', cursive; font-size: 1.6rem; color: var(--dark); }
+  .act-badge { background: var(--teal); color: #fff; padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; }
+  .act-body { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+
+  /* Question box */
+  .q-box { background: #fff; border-radius: 20px; padding: 32px; margin-bottom: 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.07); }
+  .q-num { font-size: 0.8rem; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .q-text { font-size: 1.1rem; font-weight: 700; color: var(--dark); margin-bottom: 20px; line-height: 1.5; }
+  .q-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .q-opt {
+    padding: 14px 18px; border: 2px solid #e8e8f0; border-radius: 14px;
+    cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.95rem;
+    color: var(--dark); transition: all 0.2s; background: #fafafa; text-align: center;
+  }
+  .q-opt:hover { border-color: var(--teal); background: #e8faf9; color: var(--teal); }
+  .q-opt.selected { border-color: var(--teal); background: var(--teal); color: #fff; }
+  .q-opt.correct { border-color: var(--green); background: var(--green); color: #fff; pointer-events: none; }
+  .q-opt.wrong { border-color: var(--red); background: var(--red); color: #fff; pointer-events: none; }
+  .q-opt.reveal-correct { border-color: var(--green); background: #e6fff7; color: var(--green); pointer-events: none; }
+  .feedback { margin-top: 14px; padding: 12px 16px; border-radius: 12px; font-weight: 700; display: none; }
+  .feedback.correct-fb { background: #e6fff7; color: var(--green); }
+  .feedback.wrong-fb { background: #ffe6e6; color: var(--red); }
+
+  /* drag drop */
+  .dd-container { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; min-height: 60px; padding: 14px; border: 2px dashed #ccc; border-radius: 14px; background: #fafafa; }
+  .dd-word {
+    padding: 10px 18px; background: var(--teal); color: #fff; border-radius: 30px;
+    cursor: grab; font-weight: 700; font-size: 0.95rem; user-select: none; transition: all 0.2s;
+  }
+  .dd-word:hover { background: #20a99f; transform: scale(1.05); }
+  .dd-word.dragging { opacity: 0.5; }
+  .dd-drop {
+    min-width: 120px; min-height: 48px; border: 2px dashed var(--purple); border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center; padding: 8px 12px;
+    color: #aaa; font-size: 0.85rem; font-style: italic; transition: all 0.2s; margin: 4px 0;
+  }
+  .dd-drop.dragover { border-color: var(--teal); background: #e8faf9; }
+  .dd-drop.filled { border-style: solid; border-color: var(--teal); color: var(--dark); background: #fff; }
+  .sentence-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; font-weight: 600; color: var(--dark); font-size: 1rem; }
+
+  /* fill blank */
+  .blank-input {
+    border: none; border-bottom: 2.5px solid var(--teal); padding: 4px 10px; font-family: 'Nunito', sans-serif;
+    font-size: 1rem; font-weight: 700; color: var(--dark); outline: none; width: 120px;
+    background: transparent; text-align: center;
+  }
+  .blank-input.correct-input { border-color: var(--green); color: var(--green); }
+  .blank-input.wrong-input { border-color: var(--red); color: var(--red); }
+
+  /* score panel */
+  .score-panel { background: var(--dark); color: #fff; border-radius: 20px; padding: 32px; text-align: center; margin-top: 32px; display: none; }
+  .score-panel .score-num { font-family: 'Fredoka One', cursive; font-size: 4rem; color: var(--yellow); }
+  .score-panel .score-msg { font-size: 1.1rem; color: rgba(255,255,255,0.8); margin: 8px 0 24px; }
+  .btn-retry { background: var(--yellow); color: var(--dark); border: none; padding: 12px 32px; border-radius: 30px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer; margin: 6px; transition: all 0.2s; }
+  .btn-retry:hover { background: var(--orange); color: #fff; }
+  .btn-next-act { background: var(--teal); color: #fff; border: none; padding: 12px 32px; border-radius: 30px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem; cursor: pointer; margin: 6px; transition: all 0.2s; }
+  .btn-next-act:hover { background: #20a99f; }
+  .submit-btn {
+    margin-top: 24px; padding: 14px 40px; background: var(--purple); color: #fff; border: none;
+    border-radius: 30px; font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.05rem;
+    cursor: pointer; transition: all 0.2s; display: block; margin-left: auto; margin-right: auto;
+  }
+  .submit-btn:hover { background: #7c3dcc; transform: translateY(-2px); }
+  .hint-text { background: #fff8e1; border-left: 4px solid var(--yellow); padding: 12px 16px; border-radius: 0 12px 12px 0; margin-bottom: 20px; color: #555; font-size: 0.92rem; }
+
+  /* match game */
+  .match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+  .match-col { display: flex; flex-direction: column; gap: 10px; }
+  .match-item {
+    padding: 14px 18px; border: 2px solid #e8e8f0; border-radius: 14px;
+    cursor: pointer; font-weight: 600; color: var(--dark); transition: all 0.2s; background: #fafafa; text-align: center;
+  }
+  .match-item:hover { border-color: var(--purple); background: #f0e6ff; }
+  .match-item.selected { border-color: var(--purple); background: var(--purple); color: #fff; }
+  .match-item.matched { border-color: var(--green); background: #e6fff7; color: var(--green); pointer-events: none; font-weight: 700; }
+  .match-item.wrong-match { border-color: var(--red); background: #ffe6e6; }
+  .match-label { font-size: 0.75rem; font-weight: 800; color: #aaa; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 6px; }
+
+  /* coloring */
+  .color-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 14px; margin-bottom: 20px; }
+  .color-item {
+    border: 3px solid #ddd; border-radius: 16px; padding: 16px 10px; text-align: center;
+    cursor: pointer; transition: all 0.2s; font-weight: 700; font-size: 0.9rem; color: var(--dark);
+    background: #fafafa;
+  }
+  .color-item .ci-icon { font-size: 2rem; margin-bottom: 6px; }
+  .color-item.colored-red { background: #ffe0e0 !important; border-color: #ff6b6b !important; }
+  .color-item.colored-blue { background: #e0eeff !important; border-color: #4361ee !important; }
+
+  /* Responsive */
+  @media(max-width:600px){
+    .q-options { grid-template-columns: 1fr; }
+    .auth-box { padding: 32px 24px; }
+    .act-header { padding: 16px 20px; }
+    nav { padding: 12px 18px; }
+    .nav-logo { font-size: 1.3rem; }
+    .credits-grid { flex-direction: column; }
+    .dash-cards { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="showPage('home')">Grammar <span>Detective</span> 🔍</div>
+  <div class="nav-btns" id="nav-auth-btns">
+    <button class="btn btn-outline" onclick="showPage('login')">Login</button>
+    <button class="btn btn-primary" onclick="showPage('signup')">Sign Up</button>
+  </div>
+  <div class="nav-btns" id="nav-user-btns" style="display:none;">
+    <span id="nav-username" style="color:#fff;font-weight:700;font-size:0.9rem;margin-right:4px;"></span>
+    <button class="btn btn-outline" onclick="showPage('dashboard')">Dashboard</button>
+    <button class="btn btn-primary" onclick="logout()">Logout</button>
+  </div>
+</nav>
+
+<!-- ===== HOME PAGE ===== -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <div class="float-shapes">
+      <div class="shape" style="width:300px;height:300px;background:var(--teal);top:-50px;left:-80px;"></div>
+      <div class="shape" style="width:200px;height:200px;background:var(--yellow);bottom:20px;right:-60px;"></div>
+      <div class="shape" style="width:150px;height:150px;background:var(--purple);top:40%;right:10%;"></div>
+      <div class="shape" style="width:100px;height:100px;background:var(--pink);top:20%;left:15%;"></div>
+    </div>
+    <div class="hero-badge">📚 Ages 9–10 · English Grammar</div>
+    <h1>Grammar<br><span class="accent">Detective</span> <span class="accent2">🔍</span></h1>
+    <p class="hero-sub">Become a grammar superhero! Learn nouns, pronouns, and adjectives through fun interactive activities.</p>
+    <div class="hero-btns">
+      <button class="btn btn-teal btn-big" onclick="showPage('signup')">🚀 Start Learning!</button>
+      <button class="btn btn-ghost btn-big" onclick="showPage('login')">I have an account</button>
+    </div>
+  </div>
+
+  <div class="topics-strip">
+    <div class="topics-inner">
+      <span>Countable Nouns</span><span>Uncountable Nouns</span><span>Collective Nouns</span>
+      <span>Singular & Plural</span><span>Common Nouns</span><span>Proper Nouns</span>
+      <span>Personal Pronouns</span><span>Comparative Adjectives</span><span>Superlative Adjectives</span>
+      <span>Possessive Adjectives</span><span>Countable Nouns</span><span>Uncountable Nouns</span>
+      <span>Collective Nouns</span><span>Singular & Plural</span><span>Common Nouns</span>
+      <span>Proper Nouns</span><span>Personal Pronouns</span><span>Comparative Adjectives</span>
+      <span>Superlative Adjectives</span><span>Possessive Adjectives</span>
+    </div>
+  </div>
+
+  <div class="activities-section">
+    <div class="section-title">🎮 What Will You Learn?</div>
+    <p class="section-sub">Five exciting activities covering all the grammar topics from the book!</p>
+    <div class="cards-grid">
+      <div class="activity-card c1" onclick="requireLogin('act1')">
+        <div class="card-icon">🍎</div>
+        <div class="card-title">Countable & Uncountable</div>
+        <div class="card-desc">Can you count it? Sort nouns into the right groups!</div>
+        <span class="card-tag tag-teal">Nouns • 10 Qs</span>
+      </div>
+      <div class="activity-card c2" onclick="requireLogin('act2')">
+        <div class="card-icon">🐝</div>
+        <div class="card-title">Collective Nouns</div>
+        <div class="card-desc">Match animals and things with their group names!</div>
+        <span class="card-tag tag-purple">Nouns • 8 Qs</span>
+      </div>
+      <div class="activity-card c3" onclick="requireLogin('act3')">
+        <div class="card-icon">📝</div>
+        <div class="card-title">Singular & Plural</div>
+        <div class="card-desc">Change words from one to many — including the tricky ones!</div>
+        <span class="card-tag tag-orange">Nouns • 10 Qs</span>
+      </div>
+      <div class="activity-card c4" onclick="requireLogin('act4')">
+        <div class="card-icon">🙋</div>
+        <div class="card-title">Personal Pronouns</div>
+        <div class="card-desc">Fill in the blanks with the right pronoun!</div>
+        <span class="card-tag tag-blue">Pronouns • 8 Qs</span>
+      </div>
+      <div class="activity-card c5" onclick="requireLogin('act5')">
+        <div class="card-icon">🏆</div>
+        <div class="card-title">Possessive Adjectives</div>
+        <div class="card-desc">My, your, his, her — who owns what?</div>
+        <span class="card-tag tag-pink">Adjectives • 8 Qs</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="credits-section">
+    <h2>📖 About This Project</h2>
+    <div class="credits-grid">
+      <div class="credit-card">
+        <div class="credit-role">AR & Website Developer</div>
+        <div class="credit-name">Adlishah Hakimi bin Sharilfuddin</div>
+        <div class="credit-detail">Universiti Malaysia Pahang Al-Sultan Abdullah</div>
+      </div>
+      <div class="credit-card">
+        <div class="credit-role">Exercise Book Author</div>
+        <div class="credit-name">Farah Wahida binti Mohd Zaini</div>
+        <div class="credit-detail">Grammar Detective Activity Book</div>
+      </div>
+    </div>
+    <div class="ages-badge">📚 Grammar Detective · Ages 9–10</div>
+    <p style="color:rgba(255,255,255,0.4);margin-top:16px;font-size:0.85rem;">@grammar_detective · FYP Project</p>
+  </div>
+
+  <footer>© 2024 Grammar Detective · Built with ❤️ by Adlishah Hakimi bin Sharilfuddin</footer>
+</div>
+
+<!-- ===== LOGIN PAGE ===== -->
+<div id="page-login" class="page">
+  <div class="auth-wrapper">
+    <div class="auth-box">
+      <div class="auth-logo">Grammar <span class="accent">Detective</span> 🔍</div>
+      <p class="auth-sub-title">Welcome back, Detective! 👋</p>
+      <div class="alert alert-error" id="login-error"></div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="login-user" placeholder="Enter your username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="login-pass" placeholder="Enter your password" />
+      </div>
+      <button class="btn-submit" onclick="doLogin()">🔓 Login</button>
+      <div class="auth-switch">Don't have an account? <a onclick="showPage('signup')">Sign Up Free!</a></div>
+      <div class="auth-switch" style="margin-top:8px;"><a onclick="showPage('home')" style="color:#aaa;">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIGNUP PAGE ===== -->
+<div id="page-signup" class="page">
+  <div class="auth-wrapper">
+    <div class="auth-box">
+      <div class="auth-logo">Grammar <span class="accent">Detective</span> 🔍</div>
+      <p class="auth-sub-title">Create your detective badge! 🕵️</p>
+      <div class="alert alert-error" id="signup-error"></div>
+      <div class="alert alert-success" id="signup-success"></div>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="signup-name" placeholder="Your full name" />
+      </div>
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="signup-user" placeholder="Choose a username" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="signup-pass" placeholder="Create a password (min 6 chars)" />
+      </div>
+      <div class="form-group">
+        <label>Grade / Year</label>
+        <select id="signup-grade">
+          <option value="">Select your grade</option>
+          <option>Year 4</option><option>Year 5</option><option>Year 6</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <button class="btn-submit" onclick="doSignup()">🚀 Create Account</button>
+      <div class="auth-switch">Already have an account? <a onclick="showPage('login')">Login here</a></div>
+      <div class="auth-switch" style="margin-top:8px;"><a onclick="showPage('home')" style="color:#aaa;">← Back to Home</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div id="page-dashboard" class="page">
+  <div class="dashboard">
+    <div class="dash-hero">
+      <h2>Hello, <span id="dash-name">Detective</span>! 🕵️</h2>
+      <p>Ready for today's grammar adventure?</p>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar" id="dash-progress" style="width:0%"></div>
+      </div>
+      <div class="progress-label" id="dash-progress-label">0 / 5 activities completed</div>
+    </div>
+    <div class="dash-cards">
+      <div class="dash-card" style="border-color:var(--teal);" onclick="showActivity('act1')">
+        <div class="dash-card-icon">🍎</div>
+        <div>
+          <div class="dash-card-title">Countable & Uncountable</div>
+          <div class="dash-card-status status-new" id="s-act1">● New</div>
+        </div>
+      </div>
+      <div class="dash-card" style="border-color:var(--purple);" onclick="showActivity('act2')">
+        <div class="dash-card-icon">🐝</div>
+        <div>
+          <div class="dash-card-title">Collective Nouns</div>
+          <div class="dash-card-status status-new" id="s-act2">● New</div>
+        </div>
+      </div>
+      <div class="dash-card" style="border-color:var(--orange);" onclick="showActivity('act3')">
+        <div class="dash-card-icon">📝</div>
+        <div>
+          <div class="dash-card-title">Singular & Plural</div>
+          <div class="dash-card-status status-new" id="s-act3">● New</div>
+        </div>
+      </div>
+      <div class="dash-card" style="border-color:var(--blue);" onclick="showActivity('act4')">
+        <div class="dash-card-icon">🙋</div>
+        <div>
+          <div class="dash-card-title">Personal Pronouns</div>
+          <div class="dash-card-status status-new" id="s-act4">● New</div>
+        </div>
+      </div>
+      <div class="dash-card" style="border-color:var(--pink);" onclick="showActivity('act5')">
+        <div class="dash-card-icon">🏆</div>
+        <div>
+          <div class="dash-card-title">Possessive Adjectives</div>
+          <div class="dash-card-status status-new" id="s-act5">● New</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTIVITY 1: Countable & Uncountable ===== -->
+<div id="page-act1" class="page">
+  <div class="activity-page">
+    <div class="act-header">
+      <button class="btn-back" onclick="showPage('dashboard')">← Back</button>
+      <div>
+        <div class="act-title">🍎 Countable & Uncountable Nouns</div>
+      </div>
+      <span class="act-badge">Nouns</span>
+    </div>
+    <div class="act-body">
+      <div class="hint-text">💡 <strong>Remember:</strong> Countable nouns can be counted (1 cat, 2 cats). Uncountable nouns cannot be counted (milk, water, rice).</div>
+
+      <div id="act1-questions"></div>
+
+      <button class="submit-btn" onclick="submitAct1()">✅ Check My Answers</button>
+      <div class="score-panel" id="score-act1">
+        <div class="score-num" id="score-act1-num">0/10</div>
+        <div class="score-msg" id="score-act1-msg"></div>
+        <button class="btn-retry" onclick="resetAct1()">🔄 Try Again</button>
+        <button class="btn-next-act" onclick="showActivity('act2')">Next Activity →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTIVITY 2: Collective Nouns ===== -->
+<div id="page-act2" class="page">
+  <div class="activity-page">
+    <div class="act-header">
+      <button class="btn-back" onclick="showPage('dashboard')">← Back</button>
+      <div>
+        <div class="act-title">🐝 Collective Nouns — Match Game</div>
+      </div>
+      <span class="act-badge" style="background:var(--purple);">Nouns</span>
+    </div>
+    <div class="act-body">
+      <div class="hint-text">💡 Match each group word on the left with the correct noun on the right. Click one from each side!</div>
+      <div id="act2-game"></div>
+      <div class="score-panel" id="score-act2">
+        <div class="score-num" id="score-act2-num">0/8</div>
+        <div class="score-msg" id="score-act2-msg"></div>
+        <button class="btn-retry" onclick="resetAct2()">🔄 Try Again</button>
+        <button class="btn-next-act" onclick="showActivity('act3')">Next Activity →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTIVITY 3: Singular & Plural ===== -->
+<div id="page-act3" class="page">
+  <div class="activity-page">
+    <div class="act-header">
+      <button class="btn-back" onclick="showPage('dashboard')">← Back</button>
+      <div>
+        <div class="act-title">📝 Singular & Plural</div>
+      </div>
+      <span class="act-badge" style="background:var(--orange);">Nouns</span>
+    </div>
+    <div class="act-body">
+      <div class="hint-text">💡 Type the plural form of each noun. Watch out for irregular plurals like child → children!</div>
+      <div id="act3-questions"></div>
+      <button class="submit-btn" style="background:var(--orange);" onclick="submitAct3()">✅ Check Answers</button>
+      <div class="score-panel" id="score-act3">
+        <div class="score-num" id="score-act3-num">0/10</div>
+        <div class="score-msg" id="score-act3-msg"></div>
+        <button class="btn-retry" onclick="resetAct3()">🔄 Try Again</button>
+        <button class="btn-next-act" onclick="showActivity('act4')">Next Activity →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTIVITY 4: Personal Pronouns ===== -->
+<div id="page-act4" class="page">
+  <div class="activity-page">
+    <div class="act-header">
+      <button class="btn-back" onclick="showPage('dashboard')">← Back</button>
+      <div>
+        <div class="act-title">🙋 Personal Pronouns</div>
+      </div>
+      <span class="act-badge" style="background:var(--blue);">Pronouns</span>
+    </div>
+    <div class="act-body">
+      <div class="hint-text">💡 Subject pronouns: I, You, He, She, It, We, They. Object pronouns: me, you, him, her, it, us, them.</div>
+      <div id="act4-questions"></div>
+      <button class="submit-btn" style="background:var(--blue);" onclick="submitAct4()">✅ Check Answers</button>
+      <div class="score-panel" id="score-act4">
+        <div class="score-num" id="score-act4-num">0/8</div>
+        <div class="score-msg" id="score-act4-msg"></div>
+        <button class="btn-retry" onclick="resetAct4()">🔄 Try Again</button>
+        <button class="btn-next-act" onclick="showActivity('act5')">Next Activity →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ACTIVITY 5: Possessive Adjectives ===== -->
+<div id="page-act5" class="page">
+  <div class="activity-page">
+    <div class="act-header">
+      <button class="btn-back" onclick="showPage('dashboard')">← Back</button>
+      <div>
+        <div class="act-title">🏆 Possessive Adjectives</div>
+      </div>
+      <span class="act-badge" style="background:var(--pink);">Adjectives</span>
+    </div>
+    <div class="act-body">
+      <div class="hint-text">💡 Possessive adjectives show ownership: my, your, his, her, its, our, their</div>
+      <div id="act5-questions"></div>
+      <button class="submit-btn" style="background:var(--pink);" onclick="submitAct5()">✅ Check Answers</button>
+      <div class="score-panel" id="score-act5">
+        <div class="score-num" id="score-act5-num">0/8</div>
+        <div class="score-msg" id="score-act5-msg"></div>
+        <button class="btn-retry" onclick="resetAct5()">🔄 Try Again</button>
+        <button class="btn-next-act" onclick="showPage('dashboard')">🏠 Back to Dashboard</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== STATE =====
+let users = JSON.parse(localStorage.getItem('gd_users') || '{}');
+let currentUser = JSON.parse(localStorage.getItem('gd_current') || 'null');
+let scores = JSON.parse(localStorage.getItem('gd_scores') || '{}');
+
+// ===== NAVIGATION =====
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function requireLogin(actId) {
+  if (!currentUser) { showPage('login'); return; }
+  showActivity(actId);
+}
+
+function showActivity(actId) {
+  if (!currentUser) { showPage('login'); return; }
+  if (actId === 'act1') buildAct1();
+  if (actId === 'act2') buildAct2();
+  if (actId === 'act3') buildAct3();
+  if (actId === 'act4') buildAct4();
+  if (actId === 'act5') buildAct5();
+  showPage(actId);
+}
+
+// ===== AUTH =====
+function updateNavState() {
+  if (currentUser) {
+    document.getElementById('nav-auth-btns').style.display = 'none';
+    document.getElementById('nav-user-btns').style.display = 'flex';
+    document.getElementById('nav-username').textContent = '👤 ' + currentUser.name;
+    // update dashboard
+    document.getElementById('dash-name').textContent = currentUser.name.split(' ')[0];
+    updateProgress();
+  } else {
+    document.getElementById('nav-auth-btns').style.display = 'flex';
+    document.getElementById('nav-user-btns').style.display = 'none';
+  }
+}
+
+function doSignup() {
+  const name = document.getElementById('signup-name').value.trim();
+  const user = document.getElementById('signup-user').value.trim();
+  const pass = document.getElementById('signup-pass').value;
+  const grade = document.getElementById('signup-grade').value;
+  const err = document.getElementById('signup-error');
+  const succ = document.getElementById('signup-success');
+  err.style.display = 'none'; succ.style.display = 'none';
+
+  if (!name || !user || !pass || !grade) { err.textContent = '⚠️ Please fill in all fields!'; err.style.display = 'block'; return; }
+  if (pass.length < 6) { err.textContent = '⚠️ Password must be at least 6 characters!'; err.style.display = 'block'; return; }
+  if (users[user]) { err.textContent = '⚠️ Username already taken! Try another.'; err.style.display = 'block'; return; }
+
+  users[user] = { name, pass, grade };
+  localStorage.setItem('gd_users', JSON.stringify(users));
+  succ.textContent = '🎉 Account created! Redirecting to login...';
+  succ.style.display = 'block';
+  setTimeout(() => showPage('login'), 1500);
+}
+
+function doLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  err.style.display = 'none';
+
+  if (!user || !pass) { err.textContent = '⚠️ Please enter username and password!'; err.style.display = 'block'; return; }
+  if (!users[user] || users[user].pass !== pass) { err.textContent = '❌ Wrong username or password!'; err.style.display = 'block'; return; }
+
+  currentUser = { username: user, name: users[user].name, grade: users[user].grade };
+  localStorage.setItem('gd_current', JSON.stringify(currentUser));
+  updateNavState();
+  showPage('dashboard');
+}
+
+function logout() {
+  currentUser = null;
+  localStorage.removeItem('gd_current');
+  updateNavState();
+  showPage('home');
+}
+
+function updateProgress() {
+  if (!currentUser) return;
+  const s = scores[currentUser.username] || {};
+  const done = ['act1','act2','act3','act4','act5'].filter(a => s[a] !== undefined).length;
+  document.getElementById('dash-progress').style.width = (done/5*100) + '%';
+  document.getElementById('dash-progress-label').textContent = done + ' / 5 activities completed';
+  ['act1','act2','act3','act4','act5'].forEach(a => {
+    const el = document.getElementById('s-' + a);
+    if (s[a] !== undefined) { el.textContent = '✅ Done — ' + s[a]; el.className = 'dash-card-status status-done'; }
+    else { el.textContent = '● New'; el.className = 'dash-card-status status-new'; }
+  });
+}
+
+function saveScore(act, score, total) {
+  if (!currentUser) return;
+  if (!scores[currentUser.username]) scores[currentUser.username] = {};
+  scores[currentUser.username][act] = score + '/' + total;
+  localStorage.setItem('gd_scores', JSON.stringify(scores));
+  updateProgress();
+}
+
+// ===== ACTIVITY 1: Countable/Uncountable MCQ =====
+const act1Data = [
+  { q: "🥕 Carrots", a: "C", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🍚 Rice", a: "U", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🍅 Tomatoes", a: "C", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🥛 Milk", a: "U", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🥚 Eggs", a: "C", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "💧 Water", a: "U", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🍓 Strawberries", a: "C", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🧀 Cheese", a: "U", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🍎 Apples", a: "C", opts: ["C — Countable", "U — Uncountable"] },
+  { q: "🥣 Soup", a: "U", opts: ["C — Countable", "U — Uncountable"] },
+];
+let act1Answers = {};
+
+function buildAct1() {
+  act1Answers = {};
+  document.getElementById('score-act1').style.display = 'none';
+  const container = document.getElementById('act1-questions');
+  container.innerHTML = act1Data.map((q, i) => `
+    <div class="q-box" id="qbox-act1-${i}">
+      <div class="q-num">Question ${i+1} of ${act1Data.length}</div>
+      <div class="q-text">Is this noun <strong>Countable (C)</strong> or <strong>Uncountable (U)</strong>?<br>${q.q}</div>
+      <div class="q-options">
+        ${q.opts.map((opt, j) => `<button class="q-opt" id="act1-${i}-${j}" onclick="selectAct1(${i},${j},'${j===0?'C':'U'}')">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb-act1-${i}"></div>
+    </div>
+  `).join('');
+}
+
+function selectAct1(qi, oi, val) {
+  act1Answers[qi] = val;
+  document.querySelectorAll(`#qbox-act1-${qi} .q-opt`).forEach((b,j) => {
+    b.classList.toggle('selected', j === oi);
+  });
+}
+
+function submitAct1() {
+  let score = 0;
+  act1Data.forEach((q, i) => {
+    const ans = act1Answers[i];
+    const correct = q.a;
+    const fb = document.getElementById('fb-act1-' + i);
+    document.querySelectorAll(`#qbox-act1-${i} .q-opt`).forEach((b, j) => {
+      const isCorrect = (j === 0 ? 'C' : 'U') === correct;
+      b.classList.remove('selected');
+      if (isCorrect) b.classList.add('reveal-correct');
+    });
+    if (ans === correct) {
+      score++;
+      fb.textContent = '✅ Correct!'; fb.className = 'feedback correct-fb'; fb.style.display = 'block';
+      const userBtn = document.getElementById('act1-' + i + '-' + (ans === 'C' ? 0 : 1));
+      if (userBtn) { userBtn.classList.remove('reveal-correct'); userBtn.classList.add('correct'); }
+    } else {
+      fb.textContent = ans ? `❌ You chose ${ans}, but the answer is ${correct}.` : '❌ You did not answer this question.';
+      fb.className = 'feedback wrong-fb'; fb.style.display = 'block';
+      if (ans) {
+        const userBtn = document.getElementById('act1-' + i + '-' + (ans === 'C' ? 0 : 1));
+        if (userBtn) { userBtn.classList.remove('reveal-correct'); userBtn.classList.add('wrong'); }
+      }
+    }
+  });
+  const panel = document.getElementById('score-act1');
+  document.getElementById('score-act1-num').textContent = score + '/' + act1Data.length;
+  document.getElementById('score-act1-msg').textContent = score >= 8 ? '🌟 Excellent, Detective!' : score >= 5 ? '👍 Good job! Keep practising!' : '💪 Keep trying — you can do it!';
+  panel.style.display = 'block'; panel.scrollIntoView({ behavior: 'smooth' });
+  saveScore('act1', score, act1Data.length);
+}
+
+function resetAct1() { buildAct1(); }
+
+// ===== ACTIVITY 2: Collective Nouns Match =====
+const act2Pairs = [
+  { left: "A flock of", right: "sheep" },
+  { left: "A swarm of", right: "bees" },
+  { left: "A herd of", right: "cows" },
+  { left: "A school of", right: "whales" },
+  { left: "A class of", right: "students" },
+  { left: "A pack of", right: "dogs" },
+  { left: "A troop of", right: "monkeys" },
+  { left: "A deck of", right: "cards" },
+];
+let act2Selected = { left: null, right: null };
+let act2Matched = 0;
+
+function buildAct2() {
+  act2Matched = 0; act2Selected = { left: null, right: null };
+  document.getElementById('score-act2').style.display = 'none';
+  const shuffledRight = [...act2Pairs.map(p => p.right)].sort(() => Math.random() - 0.5);
+  document.getElementById('act2-game').innerHTML = `
+    <div class="match-label">Group Word (Left) — Click to select</div>
+    <div class="match-label" style="text-align:right;">Animal / Thing (Right) — Click to match</div>
+    <div class="match-grid">
+      <div class="match-col" id="act2-left">
+        ${act2Pairs.map((p, i) => `<div class="match-item" id="ml-${i}" onclick="act2PickLeft(${i})">${p.left}</div>`).join('')}
+      </div>
+      <div class="match-col" id="act2-right">
+        ${shuffledRight.map((r, i) => `<div class="match-item" id="mr-${i}" onclick="act2PickRight(${i})" data-val="${r}">${r}</div>`).join('')}
+      </div>
+    </div>
+    <div id="act2-feedback" style="margin-top:16px;font-weight:700;font-size:1rem;min-height:28px;"></div>
+  `;
+}
+
+function act2PickLeft(i) {
+  if (document.getElementById('ml-' + i).classList.contains('matched')) return;
+  document.querySelectorAll('#act2-left .match-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('ml-' + i).classList.add('selected');
+  act2Selected.left = i;
+  tryAct2Match();
+}
+
+function act2PickRight(i) {
+  if (document.getElementById('mr-' + i).classList.contains('matched')) return;
+  document.querySelectorAll('#act2-right .match-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('mr-' + i).classList.add('selected');
+  act2Selected.right = i;
+  tryAct2Match();
+}
+
+function tryAct2Match() {
+  if (act2Selected.left === null || act2Selected.right === null) return;
+  const li = act2Selected.left, ri = act2Selected.right;
+  const leftPair = act2Pairs[li];
+  const rightEl = document.getElementById('mr-' + ri);
+  const rightVal = rightEl.getAttribute('data-val');
+  const fb = document.getElementById('act2-feedback');
+
+  if (leftPair.right === rightVal) {
+    document.getElementById('ml-' + li).classList.remove('selected');
+    document.getElementById('ml-' + li).classList.add('matched');
+    document.getElementById('ml-' + li).textContent = leftPair.left + ' ' + rightVal + ' ✅';
+    rightEl.classList.remove('selected');
+    rightEl.classList.add('matched');
+    act2Matched++;
+    fb.textContent = '✅ Correct! ' + leftPair.left + ' ' + rightVal;
+    fb.style.color = 'var(--green)';
+    if (act2Matched === act2Pairs.length) {
+      const panel = document.getElementById('score-act2');
+      document.getElementById('score-act2-num').textContent = act2Matched + '/' + act2Pairs.length;
+      document.getElementById('score-act2-msg').textContent = '🌟 Amazing! You matched them all!';
+      panel.style.display = 'block'; panel.scrollIntoView({ behavior: 'smooth' });
+      saveScore('act2', act2Matched, act2Pairs.length);
+    }
+  } else {
+    fb.textContent = '❌ Not quite! Try again.'; fb.style.color = 'var(--red)';
+    document.getElementById('ml-' + li).classList.add('wrong-match');
+    rightEl.classList.add('wrong-match');
+    setTimeout(() => {
+      document.getElementById('ml-' + li).classList.remove('selected', 'wrong-match');
+      rightEl.classList.remove('selected', 'wrong-match');
+    }, 600);
+  }
+  act2Selected = { left: null, right: null };
+}
+
+function resetAct2() { buildAct2(); }
+
+// ===== ACTIVITY 3: Singular → Plural fill blank =====
+const act3Data = [
+  { word: "apple", ans: "apples" },
+  { word: "box", ans: "boxes" },
+  { word: "child", ans: "children" },
+  { word: "woman", ans: "women" },
+  { word: "tooth", ans: "teeth" },
+  { word: "goose", ans: "geese" },
+  { word: "mouse", ans: "mice" },
+  { word: "baby", ans: "babies" },
+  { word: "knife", ans: "knives" },
+  { word: "pen", ans: "pens" },
+];
+
+function buildAct3() {
+  document.getElementById('score-act3').style.display = 'none';
+  document.getElementById('act3-questions').innerHTML = act3Data.map((q, i) => `
+    <div class="q-box">
+      <div class="q-num">Question ${i+1} of ${act3Data.length}</div>
+      <div class="q-text">Write the <strong>plural form</strong> of:</div>
+      <div class="sentence-row">
+        <strong style="font-size:1.2rem;">${q.word}</strong>
+        <span style="color:#aaa;">→</span>
+        <input class="blank-input" id="act3-${i}" placeholder="type here..." autocomplete="off" />
+      </div>
+    </div>
+  `).join('');
+}
+
+function submitAct3() {
+  let score = 0;
+  act3Data.forEach((q, i) => {
+    const inp = document.getElementById('act3-' + i);
+    const val = inp.value.trim().toLowerCase();
+    inp.disabled = true;
+    if (val === q.ans) { score++; inp.classList.add('correct-input'); inp.value = '✅ ' + q.ans; }
+    else { inp.classList.add('wrong-input'); inp.value = '❌ ' + (val || '?') + ' → ' + q.ans; }
+  });
+  const panel = document.getElementById('score-act3');
+  document.getElementById('score-act3-num').textContent = score + '/' + act3Data.length;
+  document.getElementById('score-act3-msg').textContent = score >= 8 ? '🌟 Brilliant, Detective!' : score >= 5 ? '👍 Well done! Review the irregular plurals.' : '💪 Keep practising the tricky ones!';
+  panel.style.display = 'block'; panel.scrollIntoView({ behavior: 'smooth' });
+  saveScore('act3', score, act3Data.length);
+}
+
+function resetAct3() { buildAct3(); }
+
+// ===== ACTIVITY 4: Personal Pronouns MCQ =====
+const act4Data = [
+  { sentence: "___ is my best friend. (talking about a girl)", ans: 1, opts: ["He", "She", "They", "It"] },
+  { sentence: "I gave the book to ___. (talking about a boy)", ans: 1, opts: ["he", "him", "his", "they"] },
+  { sentence: "___ and I went to school together.", ans: 0, opts: ["She", "Her", "Hers", "Them"] },
+  { sentence: "The dog wagged ___ tail.", ans: 1, opts: ["his", "its", "their", "our"] },
+  { sentence: "My friends and ___ love football.", ans: 1, opts: ["them", "I", "me", "us"] },
+  { sentence: "Can you help ___? (talking about me)", ans: 1, opts: ["I", "me", "my", "mine"] },
+  { sentence: "___ are a great team! (talking about you and your friends)", ans: 0, opts: ["We", "Us", "Our", "Ours"] },
+  { sentence: "Please tell ___ the answer. (talking about them)", ans: 1, opts: ["they", "them", "their", "theirs"] },
+];
+let act4Answers = {};
+
+function buildAct4() {
+  act4Answers = {};
+  document.getElementById('score-act4').style.display = 'none';
+  document.getElementById('act4-questions').innerHTML = act4Data.map((q, i) => `
+    <div class="q-box" id="qbox-act4-${i}">
+      <div class="q-num">Question ${i+1} of ${act4Data.length}</div>
+      <div class="q-text">${q.sentence}</div>
+      <div class="q-options">
+        ${q.opts.map((opt, j) => `<button class="q-opt" id="act4-${i}-${j}" onclick="selectAct4(${i},${j})">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb-act4-${i}"></div>
+    </div>
+  `).join('');
+}
+
+function selectAct4(qi, oi) {
+  act4Answers[qi] = oi;
+  document.querySelectorAll(`#qbox-act4-${qi} .q-opt`).forEach((b, j) => b.classList.toggle('selected', j === oi));
+}
+
+function submitAct4() {
+  let score = 0;
+  act4Data.forEach((q, i) => {
+    const chosen = act4Answers[i];
+    const fb = document.getElementById('fb-act4-' + i);
+    document.querySelectorAll(`#qbox-act4-${i} .q-opt`).forEach((b, j) => {
+      b.classList.remove('selected');
+      if (j === q.ans) b.classList.add('reveal-correct');
+    });
+    if (chosen === q.ans) {
+      score++;
+      document.getElementById('act4-' + i + '-' + chosen).classList.remove('reveal-correct');
+      document.getElementById('act4-' + i + '-' + chosen).classList.add('correct');
+      fb.textContent = '✅ Correct!'; fb.className = 'feedback correct-fb'; fb.style.display = 'block';
+    } else {
+      if (chosen !== undefined) {
+        document.getElementById('act4-' + i + '-' + chosen).classList.remove('reveal-correct');
+        document.getElementById('act4-' + i + '-' + chosen).classList.add('wrong');
+      }
+      fb.textContent = chosen !== undefined ? `❌ The answer is "${q.opts[q.ans]}"` : '❌ You did not answer this.';
+      fb.className = 'feedback wrong-fb'; fb.style.display = 'block';
+    }
+  });
+  const panel = document.getElementById('score-act4');
+  document.getElementById('score-act4-num').textContent = score + '/' + act4Data.length;
+  document.getElementById('score-act4-msg').textContent = score >= 6 ? '🌟 Super Detective!' : score >= 4 ? '👍 Good try! Review subject vs object pronouns.' : '💪 Pronouns are tricky — keep practising!';
+  panel.style.display = 'block'; panel.scrollIntoView({ behavior: 'smooth' });
+  saveScore('act4', score, act4Data.length);
+}
+
+function resetAct4() { buildAct4(); }
+
+// ===== ACTIVITY 5: Possessive Adjectives fill blank =====
+const act5Data = [
+  { sentence: "Amanda has a sister. ___ name is Alisya.", ans: "her", hint: "(Amanda = she)" },
+  { sentence: "We love swimming. Swimming is ___ hobby.", ans: "our", hint: "(we)" },
+  { sentence: "You need to go back. ___ mommy is calling.", ans: "your", hint: "(you)" },
+  { sentence: "The tiger is hurt. ___ tail is bleeding.", ans: "its", hint: "(the tiger = it)" },
+  { sentence: "Tommy and Ben are siblings. ___ parents are kind.", ans: "their", hint: "(they)" },
+  { sentence: "This is John. ___ favourite colour is blue.", ans: "his", hint: "(John = he)" },
+  { sentence: "She is a teacher. ___ students are good.", ans: "her", hint: "(she)" },
+  { sentence: "I have many friends. ___ friends are the best!", ans: "my", hint: "(I)" },
+];
+
+function buildAct5() {
+  document.getElementById('score-act5').style.display = 'none';
+  document.getElementById('act5-questions').innerHTML = act5Data.map((q, i) => `
+    <div class="q-box">
+      <div class="q-num">Question ${i+1} of ${act5Data.length}</div>
+      <div class="q-text">${q.sentence.replace('___', `<input class="blank-input" id="act5-${i}" placeholder="___" autocomplete="off" style="width:80px;" />`)} <span style="color:#aaa;font-size:0.85rem;">${q.hint}</span></div>
+    </div>
+  `).join('');
+}
+
+function submitAct5() {
+  let score = 0;
+  act5Data.forEach((q, i) => {
+    const inp = document.getElementById('act5-' + i);
+    const val = inp.value.trim().toLowerCase();
+    inp.disabled = true;
+    if (val === q.ans) { score++; inp.classList.add('correct-input'); inp.value = '✅ ' + q.ans; }
+    else { inp.classList.add('wrong-input'); inp.value = '❌ ' + (val || '?') + ' → ' + q.ans; }
+  });
+  const panel = document.getElementById('score-act5');
+  document.getElementById('score-act5-num').textContent = score + '/' + act5Data.length;
+  document.getElementById('score-act5-msg').textContent = score >= 6 ? '🏆 Outstanding Detective! You mastered possessive adjectives!' : score >= 4 ? '👍 Good work! Review my/your/his/her/its/our/their.' : '💪 Keep practising — you will get it!';
+  panel.style.display = 'block'; panel.scrollIntoView({ behavior: 'smooth' });
+  saveScore('act5', score, act5Data.length);
+}
+
+function resetAct5() { buildAct5(); }
+
+// ===== INIT =====
+updateNavState();
+</script>
+</body>
+</html>

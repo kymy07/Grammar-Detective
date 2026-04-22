@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Detective — Personal Pronouns</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: var(--tan); }
+
+    .act-header { background:var(--white); padding:16px 28px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-sm); flex-wrap:wrap; border-bottom:3px solid var(--tan-dark); }
+    .act-header-info { flex:1; min-width:0; }
+    .act-title    { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:900; color:var(--dark); line-height:1.2; }
+    .act-subtitle { font-size:0.82rem; font-weight:700; color:var(--brown); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+    .act-badge    { padding:5px 16px; border-radius:20px; font-size:0.8rem; font-weight:900; color:#fff; font-family:'Baloo 2',cursive; }
+    .btn-back     { background:var(--tan); border:none; border-radius:var(--radius-sm); padding:8px 16px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:800; color:var(--brown); transition:all 0.2s; text-decoration:none; font-size:0.88rem; }
+    .btn-back:hover { background:var(--brown); color:#fff; }
+    .act-body     { max-width:820px; margin:0 auto; padding:32px 20px 60px; }
+
+    .notes-box { background:var(--white); border-radius:var(--radius-lg); padding:24px 26px; margin-bottom:24px; box-shadow:var(--shadow-sm); border-top:5px solid var(--blue); }
+    .notes-box h3 { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:900; margin-bottom:12px; color:var(--dark); }
+    .notes-box p  { font-size:0.93rem; color:#555; line-height:1.75; }
+    .example-row { display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; }
+    .example-pill { background:var(--tan); border-radius:30px; padding:5px 16px; font-weight:700; font-size:0.88rem; color:var(--brown); }
+
+    .pronoun-table { width:100%; border-collapse:collapse; margin-top:14px; font-size:0.88rem; }
+    .pronoun-table th { background:var(--blue); color:#fff; padding:10px 14px; font-family:'Baloo 2',cursive; font-size:0.88rem; }
+    .pronoun-table td { padding:8px 14px; border-bottom:1px solid #eee; text-align:center; }
+    .pronoun-table tr:nth-child(even) td { background:#eef2fc; }
+    .pronoun-pill { background:var(--blue); color:#fff; padding:3px 12px; border-radius:20px; font-weight:700; font-size:0.82rem; }
+
+    .section-label { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:900; color:var(--dark); margin-bottom:8px; margin-top:32px; padding-bottom:8px; border-bottom:2.5px solid var(--tan-dark); }
+    .hint-box { background:#fffbe8; border-left:4px solid var(--yellow); padding:11px 16px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin-bottom:20px; color:#6a5200; font-size:0.9rem; line-height:1.6; font-weight:600; }
+    .hint-box strong { color:var(--dark); }
+
+    .q-box  { background:var(--white); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .q-num  { font-size:0.72rem; font-weight:900; color:var(--brown); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+    .q-text { font-size:1rem; font-weight:700; color:var(--dark); margin-bottom:16px; line-height:1.6; }
+    .q-options { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .q-opt  { padding:11px 14px; border:2.5px solid var(--tan-dark); border-radius:var(--radius-sm); cursor:pointer; font-family:'Nunito',sans-serif; font-weight:700; font-size:0.92rem; color:var(--dark); background:var(--offwhite); text-align:center; transition:all 0.18s; }
+    .q-opt:hover          { border-color:var(--blue); background:#eef2fc; color:var(--blue); }
+    .q-opt.selected       { border-color:var(--blue); background:var(--blue); color:#fff; }
+    .q-opt.correct        { border-color:var(--green); background:var(--green); color:#fff; pointer-events:none; }
+    .q-opt.wrong          { border-color:var(--red);   background:var(--red);   color:#fff; pointer-events:none; }
+    .q-opt.reveal-correct { border-color:var(--green); background:#edfaf3; color:var(--green); pointer-events:none; }
+
+    .feedback { margin-top:10px; padding:9px 13px; border-radius:10px; font-weight:700; font-size:0.9rem; display:none; }
+    .feedback.correct-fb { background:#edfaf3; color:#2e7d4f; }
+    .feedback.wrong-fb   { background:#fef0f0; color:var(--red); }
+
+    .submit-btn { display:block; margin:24px auto 0; padding:13px 40px; border:none; border-radius:40px; font-family:'Nunito',sans-serif; font-weight:800; font-size:1rem; cursor:pointer; transition:all 0.2s; color:#fff; }
+    .submit-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+    .submit-btn.btn-blue { background:var(--blue); }
+
+    .score-panel { background:var(--dark); color:#fff; border-radius:var(--radius-lg); padding:36px 28px; text-align:center; margin-top:36px; display:none; box-shadow:var(--shadow-lg); }
+    .score-stars { font-size:2.4rem; margin-bottom:8px; }
+    .score-big   { font-family:'Baloo 2',cursive; font-size:5rem; font-weight:900; color:var(--yellow); line-height:1; }
+    .score-total { font-size:0.95rem; color:rgba(255,255,255,0.5); margin-bottom:8px; }
+    .score-msg   { font-size:1rem; color:rgba(255,255,255,0.78); margin-bottom:26px; line-height:1.6; }
+    .score-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+
+    @media (max-width:600px) {
+      .act-header { padding:12px 16px; }
+      .act-title  { font-size:1.15rem; }
+      .act-body   { padding:20px 14px 50px; }
+      .q-options  { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="gd-nav" id="gd-nav"></nav>
+
+<div class="act-header">
+  <a href="dashboard.html" class="btn-back">← Dashboard</a>
+  <div class="act-header-info">
+    <div class="act-title">🙋 Personal Pronouns</div>
+    <div class="act-subtitle">Chapter 2 — Pronouns</div>
+  </div>
+  <span class="act-badge" style="background:var(--blue);">3 Exercises</span>
+</div>
+
+<div class="act-body">
+
+  <!-- NOTES -->
+  <div class="notes-box">
+    <h3>📖 What are Personal Pronouns?</h3>
+    <p>A personal pronoun <strong>replaces the name</strong> of a person, place or thing. There are <strong>12 personal pronouns</strong>: I, you, he, she, it, we, they, me, him, her, us, them.</p>
+    <table class="pronoun-table">
+      <tr><th>Person</th><th>Singular (Subject)</th><th>Plural (Subject)</th><th>Object</th></tr>
+      <tr><td>1st</td><td><span class="pronoun-pill">I</span></td><td><span class="pronoun-pill">we</span></td><td>me / us</td></tr>
+      <tr><td>2nd</td><td><span class="pronoun-pill">you</span></td><td><span class="pronoun-pill">you</span></td><td>you</td></tr>
+      <tr><td>3rd</td><td><span class="pronoun-pill">he / she / it</span></td><td><span class="pronoun-pill">they</span></td><td>him / her / it / them</td></tr>
+    </table>
+    <div style="margin-top:14px;">
+      <p style="font-weight:800;color:var(--blue);margin-bottom:6px;">Examples:</p>
+      <div class="example-row">
+        <span class="example-pill">I love playing games!</span>
+        <span class="example-pill">She is a pilot.</span>
+        <span class="example-pill">She gave me a chocolate.</span>
+        <span class="example-pill">The teacher gave us a lollipop.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXERCISE 1 -->
+  <div class="section-label">✏️ Exercise 1 — He, She or It?</div>
+  <div class="hint-box">Use <strong>He</strong> for a boy · <strong>She</strong> for a girl · <strong>It</strong> for a thing or animal.</div>
+  <div id="ex1-questions"></div>
+  <button class="submit-btn btn-blue" onclick="checkEx1()">✅ Check Answers</button>
+  <div class="feedback" id="fb-ex1" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- EXERCISE 2 -->
+  <div class="section-label">🔍 Exercise 2 — Identify the Pronoun</div>
+  <div class="hint-box">Each sentence needs a personal pronoun. Click the correct one!</div>
+  <div id="ex2-questions"></div>
+  <button class="submit-btn btn-blue" onclick="checkEx2()">✅ Check Answers</button>
+  <div class="feedback" id="fb-ex2" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- EXERCISE 3 -->
+  <div class="section-label">🖊️ Exercise 3 — Fill in the Pronoun</div>
+  <div class="hint-box">Choose the correct subject or object pronoun to complete each sentence.</div>
+  <div id="ex3-questions"></div>
+  <button class="submit-btn btn-blue" onclick="checkEx3()">✅ Check Answers</button>
+  <div class="feedback" id="fb-ex3" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
+
+  <!-- SCORE PANEL -->
+  <div class="score-panel" id="score-panel">
+    <div class="score-stars" id="sp-stars"></div>
+    <div class="score-big"   id="sp-num">0</div>
+    <div class="score-total" id="sp-total">out of questions</div>
+    <div class="score-msg"   id="sp-msg"></div>
+    <div class="score-btns">
+      <button class="btn btn-yellow" onclick="resetAll()">🔄 Try Again</button>
+      <a href="activity5.html" class="btn btn-pink">Next Activity 🏆 →</a>
+      <a href="dashboard.html" class="btn btn-tan">🏠 Dashboard</a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="gd-footer">© 2024 Grammar Detective · <a href="index.html">Home</a></footer>
+
+<script src="auth.js"></script>
+<script>
+GD.requireAuth(true);
+
+const ex1Data = [
+  {subject:'👦 A boy',ans:'He'},{subject:'🏫 A school',ans:'It'},{subject:'👩 A woman',ans:'She'},
+  {subject:'🧥 A jacket',ans:'It'},{subject:'📚 A book',ans:'It'},{subject:'😢 A sad boy',ans:'He'},
+  {subject:'👟 A shoe',ans:'It'},{subject:'👶 A baby (girl)',ans:'She'},{subject:'📖 Someone reading',ans:'He'},
+];
+const ex2Data = [
+  {sentence:'___ am excited.',opts:['I','You','He','We'],ans:'I'},
+  {sentence:'___ are my classmate.',opts:['I','You','She','They'],ans:'You'},
+  {sentence:'___ is handsome.',opts:['She','He','It','We'],ans:'He'},
+  {sentence:'___ is friendly.',opts:['He','She','It','They'],ans:'She'},
+  {sentence:'___ is a cute kitten.',opts:['He','She','It','We'],ans:'It'},
+  {sentence:'___ are a great team.',opts:['I','He','We','They'],ans:'We'},
+  {sentence:'___ are awesome.',opts:['I','She','We','They'],ans:'They'},
+  {sentence:'What do ___ want?',opts:['I','you','he','she'],ans:'you'},
+];
+const ex3Data = [
+  {sentence:'I love ___. (my cat → her)',opts:['her','him','it','them'],ans:'her'},
+  {sentence:'She gave ___ a gift. (me)',opts:['I','me','my','we'],ans:'me'},
+  {sentence:'The dog is barking at ___.',opts:['he','him','his','her'],ans:'him'},
+  {sentence:'I painted ___. (this picture)',opts:['it','its','him','her'],ans:'it'},
+  {sentence:'The teacher gave ___ a lollipop.',opts:['we','us','our','they'],ans:'us'},
+  {sentence:'Oh, we were looking for ___!',opts:['you','your','yours','he'],ans:'you'},
+  {sentence:'Khalid is helping ___ clean.',opts:['they','them','their','it'],ans:'them'},
+  {sentence:'I am sending ___ a new dress.',opts:['she','her','hers','he'],ans:'her'},
+];
+
+let ex1Sel={}, ex2Sel={}, ex3Sel={};
+let doneEx={ex1:false,ex2:false,ex3:false};
+
+function buildEx1() {
+  ex1Sel={};
+  document.getElementById('fb-ex1').style.display='none';
+  document.getElementById('ex1-questions').innerHTML = ex1Data.map((q,i)=>`
+    <div class="q-box" id="qb1-${i}">
+      <div class="q-num">Question ${i+1} of ${ex1Data.length}</div>
+      <div class="q-text">${q.subject} — which pronoun?</div>
+      <div class="q-options" style="grid-template-columns:repeat(3,1fr);max-width:360px;">
+        ${['He','She','It'].map(opt=>`<button class="q-opt" id="ex1-${i}-${opt}" onclick="pickQ(ex1Sel,${i},'${opt}','ex1')">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb1-${i}"></div>
+    </div>`).join('');
+}
+function buildEx2() {
+  ex2Sel={};
+  document.getElementById('fb-ex2').style.display='none';
+  document.getElementById('ex2-questions').innerHTML = ex2Data.map((q,i)=>`
+    <div class="q-box" id="qb2-${i}">
+      <div class="q-num">Question ${i+1} of ${ex2Data.length}</div>
+      <div class="q-text">${q.sentence}</div>
+      <div class="q-options">
+        ${q.opts.map(opt=>`<button class="q-opt" id="ex2-${i}-${opt}" onclick="pickQ(ex2Sel,${i},'${opt}','ex2')">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb2-${i}"></div>
+    </div>`).join('');
+}
+function buildEx3() {
+  ex3Sel={};
+  document.getElementById('fb-ex3').style.display='none';
+  document.getElementById('ex3-questions').innerHTML = ex3Data.map((q,i)=>`
+    <div class="q-box" id="qb3-${i}">
+      <div class="q-num">Question ${i+1} of ${ex3Data.length}</div>
+      <div class="q-text">${q.sentence}</div>
+      <div class="q-options">
+        ${q.opts.map(opt=>`<button class="q-opt" id="ex3-${i}-${opt}" onclick="pickQ(ex3Sel,${i},'${opt}','ex3')">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb3-${i}"></div>
+    </div>`).join('');
+}
+
+function pickQ(selObj,qi,val,prefix) {
+  let data,allOpts;
+  if(prefix==='ex1'){data=ex1Data[qi];allOpts=['He','She','It'];ex1Sel[qi]=val;}
+  if(prefix==='ex2'){data=ex2Data[qi];allOpts=data.opts;ex2Sel[qi]=val;}
+  if(prefix==='ex3'){data=ex3Data[qi];allOpts=data.opts;ex3Sel[qi]=val;}
+  allOpts.forEach(o=>{const b=document.getElementById(prefix+'-'+qi+'-'+o);if(b)b.classList.toggle('selected',o===val);});
+}
+
+function checkExercise(exData,exSel,prefix,fbId,done) {
+  let correct=0;
+  exData.forEach((q,i)=>{
+    const chosen=exSel[i];
+    const ans=q.ans;
+    const allOpts=prefix==='ex1'?['He','She','It']:q.opts;
+    const fb=document.getElementById('fb'+prefix.slice(-1)+'-'+i);
+    allOpts.forEach(o=>{
+      const b=document.getElementById(prefix+'-'+i+'-'+o);
+      if(!b)return;
+      b.classList.remove('selected');
+      if(o===ans)b.classList.add('reveal-correct');
+    });
+    if(chosen===ans){
+      correct++;
+      const wb=document.getElementById(prefix+'-'+i+'-'+chosen);
+      if(wb){wb.classList.remove('reveal-correct');wb.classList.add('correct');}
+      fb.textContent='✅ Correct!';fb.className='feedback correct-fb';fb.style.display='block';
+    } else {
+      if(chosen){const wb=document.getElementById(prefix+'-'+i+'-'+chosen);if(wb){wb.classList.remove('reveal-correct');wb.classList.add('wrong');}}
+      fb.textContent=chosen?`❌ Answer: "${ans}"`:'❌ Not answered.';
+      fb.className='feedback wrong-fb';fb.style.display='block';
+    }
+  });
+  const fb=document.getElementById(fbId);
+  fb.style.display='block';
+  fb.className=correct===exData.length?'feedback correct-fb':'feedback wrong-fb';
+  fb.textContent='📊 '+correct+'/'+exData.length+' correct.';
+  done();
+}
+
+function checkEx1(){checkExercise(ex1Data,ex1Sel,'ex1','fb-ex1',()=>{doneEx.ex1=true;checkAllDone();});}
+function checkEx2(){checkExercise(ex2Data,ex2Sel,'ex2','fb-ex2',()=>{doneEx.ex2=true;checkAllDone();});}
+function checkEx3(){checkExercise(ex3Data,ex3Sel,'ex3','fb-ex3',()=>{doneEx.ex3=true;checkAllDone();});}
+
+function checkAllDone(){if(doneEx.ex1&&doneEx.ex2&&doneEx.ex3)showScore();}
+function showScore(){
+  let correct=0,total=0;
+  const tally=(exData,exSel)=>exData.forEach((q,i)=>{total++;if(exSel[i]===q.ans)correct++;});
+  tally(ex1Data,ex1Sel);tally(ex2Data,ex2Sel);tally(ex3Data,ex3Sel);
+  GD.saveActivityScore('act4',correct,total);
+  const pct=correct/total;
+  document.getElementById('sp-stars').textContent=pct>=0.9?'⭐⭐⭐':pct>=0.6?'⭐⭐':'⭐';
+  document.getElementById('sp-num').textContent=correct;
+  document.getElementById('sp-total').textContent='out of '+total+' questions';
+  document.getElementById('sp-msg').textContent=GD.scoreMsg(correct,total);
+  const panel=document.getElementById('score-panel');
+  panel.style.display='block';panel.scrollIntoView({behavior:'smooth'});
+}
+function resetAll(){
+  doneEx={ex1:false,ex2:false,ex3:false};
+  document.getElementById('score-panel').style.display='none';
+  buildEx1();buildEx2();buildEx3();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+buildEx1();buildEx2();buildEx3();
+</script>
+</body>
+</html>

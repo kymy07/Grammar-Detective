@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Detective — Home</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ---- Hero ---- */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #16213e 55%, #0f3460 100%);
+      min-height: 92vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 50px 24px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 25% 50%, rgba(46,196,182,.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 25%, rgba(255,217,61,.13) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .float-shape {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      animation: bob 7s ease-in-out infinite;
+    }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-22px)} }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--yellow); color: var(--dark);
+      padding: 6px 22px; border-radius: 30px;
+      font-weight: 800; font-size: 0.82rem; letter-spacing: 2px;
+      text-transform: uppercase; margin-bottom: 22px; position: relative; z-index: 1;
+    }
+    .hero h1 {
+      font-size: clamp(3.2rem, 9vw, 6.5rem);
+      color: #fff; margin-bottom: 16px; position: relative; z-index: 1;
+    }
+    .hero h1 .y { color: var(--yellow); }
+    .hero h1 .t { color: var(--teal); }
+    .hero-sub {
+      font-size: 1.15rem; color: rgba(255,255,255,.75);
+      max-width: 520px; margin: 0 auto 38px; line-height: 1.7;
+      position: relative; z-index: 1;
+    }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
+
+    /* ---- Scroll ticker ---- */
+    .ticker { background: var(--yellow); padding: 13px 0; overflow: hidden; }
+    .ticker-inner {
+      display: flex; gap: 36px; white-space: nowrap;
+      animation: tickerScroll 22s linear infinite;
+    }
+    .ticker-inner span { font-weight: 800; color: var(--dark); font-size: 0.92rem; text-transform: uppercase; letter-spacing: 1px; }
+    .ticker-inner span::before { content: '⭐ '; }
+    @keyframes tickerScroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    /* ---- Activity preview cards ---- */
+    .preview-section { padding: 64px 24px 48px; max-width: 1100px; margin: 0 auto; }
+    .section-title { font-size: 2.1rem; text-align: center; margin-bottom: 6px; }
+    .section-sub   { text-align: center; color: #777; margin-bottom: 40px; font-size: 1.02rem; }
+
+    .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 22px; }
+    .preview-card {
+      background: var(--card); border-radius: var(--radius);
+      padding: 28px 22px; text-align: center;
+      box-shadow: var(--shadow); cursor: pointer;
+      border-top: 6px solid transparent;
+      transition: all 0.28s; text-decoration: none; display: block; color: inherit;
+    }
+    .preview-card:hover { transform: translateY(-9px); box-shadow: var(--shadow-hover); }
+    .preview-card .p-icon  { font-size: 3rem; margin-bottom: 14px; }
+    .preview-card .p-title { font-family: 'Fredoka One', cursive; font-size: 1.25rem; margin-bottom: 8px; }
+    .preview-card .p-desc  { color: #777; font-size: 0.88rem; line-height: 1.6; margin-bottom: 14px; }
+    .tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 0.77rem; font-weight: 700; }
+
+    /* ---- Credits ---- */
+    .credits { background: var(--dark); color: #fff; padding: 64px 24px; text-align: center; }
+    .credits h2 { font-size: 2rem; color: var(--yellow); margin-bottom: 42px; }
+    .credits-row { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; max-width: 860px; margin: 0 auto 36px; }
+    .credit-card {
+      background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 18px; padding: 28px 30px; flex: 1; min-width: 240px;
+    }
+    .cr-role   { font-size: 0.75rem; font-weight: 800; color: var(--teal); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+    .cr-name   { font-family: 'Fredoka One', cursive; font-size: 1.35rem; margin-bottom: 4px; }
+    .cr-detail { color: rgba(255,255,255,.5); font-size: 0.88rem; }
+    .age-pill  { background: var(--teal); color: #fff; padding: 10px 30px; border-radius: 30px; font-weight: 800; font-size: 0.95rem; display: inline-block; margin-top: 6px; }
+  </style>
+</head>
+<body>
+
+<nav class="gd-nav" id="gd-nav"></nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- decorative blobs -->
+  <div class="float-shape" style="width:280px;height:280px;background:rgba(46,196,182,.08);top:-60px;left:-70px;animation-delay:0s;"></div>
+  <div class="float-shape" style="width:200px;height:200px;background:rgba(255,217,61,.08);bottom:30px;right:-50px;animation-delay:2s;"></div>
+  <div class="float-shape" style="width:130px;height:130px;background:rgba(155,93,229,.1);top:38%;right:8%;animation-delay:4s;"></div>
+
+  <div class="hero-badge">📚 Ages 9–10 · English Grammar</div>
+  <h1>Grammar <span class="y">Detective</span> <span class="t">🔍</span></h1>
+  <p class="hero-sub">Become a grammar superhero! Learn nouns, pronouns, and adjectives through fun interactive activities and exercises.</p>
+  <div class="hero-btns">
+    <a href="signup.html" class="btn btn-teal btn-big">🚀 Start Learning!</a>
+    <a href="login.html"  class="btn btn-ghost btn-big">I have an account</a>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-inner">
+    <span>Countable Nouns</span><span>Uncountable Nouns</span><span>Collective Nouns</span>
+    <span>Singular &amp; Plural</span><span>Common Nouns</span><span>Proper Nouns</span>
+    <span>Personal Pronouns</span><span>Comparative Adjectives</span>
+    <span>Superlative Adjectives</span><span>Possessive Adjectives</span>
+    <!-- duplicated for seamless loop -->
+    <span>Countable Nouns</span><span>Uncountable Nouns</span><span>Collective Nouns</span>
+    <span>Singular &amp; Plural</span><span>Common Nouns</span><span>Proper Nouns</span>
+    <span>Personal Pronouns</span><span>Comparative Adjectives</span>
+    <span>Superlative Adjectives</span><span>Possessive Adjectives</span>
+  </div>
+</div>
+
+<!-- ACTIVITY PREVIEW -->
+<section class="preview-section">
+  <h2 class="section-title">🎮 Five Fun Activities</h2>
+  <p class="section-sub">Based on the Grammar Detective Activity Book. Sign up free to start playing!</p>
+
+  <div class="preview-grid">
+    <a href="activity1.html" class="preview-card" style="border-color:var(--teal);">
+      <div class="p-icon">🍎</div>
+      <div class="p-title">Countable &amp; Uncountable</div>
+      <div class="p-desc">Can you count it? Sort food nouns into the right groups with exercises straight from the book.</div>
+      <span class="tag" style="background:#e0faf8;color:var(--teal);">Nouns · 3 exercises</span>
+    </a>
+    <a href="activity2.html" class="preview-card" style="border-color:var(--purple);">
+      <div class="p-icon">🐝</div>
+      <div class="p-title">Collective Nouns</div>
+      <div class="p-desc">Match group words with animals and things. Fill in the blanks from the list!</div>
+      <span class="tag" style="background:#f0e6ff;color:var(--purple);">Nouns · 3 exercises</span>
+    </a>
+    <a href="activity3.html" class="preview-card" style="border-color:var(--orange);">
+      <div class="p-icon">📝</div>
+      <div class="p-title">Singular &amp; Plural</div>
+      <div class="p-desc">Change words from one to many — including the tricky irregular ones like child → children!</div>
+      <span class="tag" style="background:#fff0e6;color:var(--orange);">Nouns · 3 exercises</span>
+    </a>
+    <a href="activity4.html" class="preview-card" style="border-color:var(--blue);">
+      <div class="p-icon">🙋</div>
+      <div class="p-title">Personal Pronouns</div>
+      <div class="p-desc">He, She, It, They — fill in blanks and choose the right subject or object pronoun.</div>
+      <span class="tag" style="background:#e6ecff;color:var(--blue);">Pronouns · 3 exercises</span>
+    </a>
+    <a href="activity5.html" class="preview-card" style="border-color:var(--pink);">
+      <div class="p-icon">🏆</div>
+      <div class="p-title">Possessive Adjectives</div>
+      <div class="p-desc">My, your, his, her, its, our, their — show ownership correctly in every sentence!</div>
+      <span class="tag" style="background:#ffe6f3;color:var(--pink);">Adjectives · 3 exercises</span>
+    </a>
+  </div>
+</section>
+
+<!-- CREDITS -->
+<section class="credits">
+  <h2>📖 About This Project</h2>
+  <div class="credits-row">
+    <div class="credit-card">
+      <div class="cr-role">AR &amp; Website Developer</div>
+      <div class="cr-name">Adlishah Hakimi bin Sharilfuddin</div>
+      <div class="cr-detail">Universiti Malaysia Pahang Al-Sultan Abdullah (UMPSA)</div>
+    </div>
+    <div class="credit-card">
+      <div class="cr-role">Exercise Book Author</div>
+      <div class="cr-name">Farah Wahida binti Mohd Zaini</div>
+      <div class="cr-detail">Grammar Detective Activity Book · Ages 9–10</div>
+    </div>
+  </div>
+  <div class="age-pill">📚 Grammar Detective · Ages 9–10</div>
+  <p style="color:rgba(255,255,255,.3);margin-top:14px;font-size:0.82rem;">@grammar_detective · FYP Project</p>
+</section>
+
+<footer>
+  © 2024 Grammar Detective · Developed by
+  <a href="#">Adlishah Hakimi bin Sharilfuddin</a>
+</footer>
+
+<script src="auth.js"></script>
+</body>
+</html>

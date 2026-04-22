@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Detective — Singular &amp; Plural</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { background: var(--tan); }
+
+    .act-header { background:var(--white); padding:16px 28px; display:flex; align-items:center; gap:14px; box-shadow:var(--shadow-sm); flex-wrap:wrap; border-bottom:3px solid var(--tan-dark); }
+    .act-header-info { flex:1; min-width:0; }
+    .act-title    { font-family:'Baloo 2',cursive; font-size:1.4rem; font-weight:900; color:var(--dark); line-height:1.2; }
+    .act-subtitle { font-size:0.82rem; font-weight:700; color:var(--brown); text-transform:uppercase; letter-spacing:1px; margin-top:2px; }
+    .act-badge    { padding:5px 16px; border-radius:20px; font-size:0.8rem; font-weight:900; color:#fff; font-family:'Baloo 2',cursive; }
+    .btn-back     { background:var(--tan); border:none; border-radius:var(--radius-sm); padding:8px 16px; cursor:pointer; font-family:'Nunito',sans-serif; font-weight:800; color:var(--brown); transition:all 0.2s; text-decoration:none; font-size:0.88rem; }
+    .btn-back:hover { background:var(--brown); color:#fff; }
+    .act-body     { max-width:820px; margin:0 auto; padding:32px 20px 60px; }
+
+    .notes-box { background:var(--white); border-radius:var(--radius-lg); padding:24px 26px; margin-bottom:24px; box-shadow:var(--shadow-sm); border-top:5px solid var(--orange); }
+    .notes-box h3 { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:900; margin-bottom:12px; color:var(--dark); }
+    .notes-box p  { font-size:0.93rem; color:#555; line-height:1.75; }
+
+    .rules-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; margin-top:14px; }
+    .rule-card  { background:var(--tan); border-radius:var(--radius-sm); padding:14px 16px; border-left:4px solid var(--orange); }
+    .rule-card strong { display:block; color:var(--orange); margin-bottom:4px; font-size:0.85rem; font-weight:900; }
+    .rule-card p { font-size:0.87rem; color:#666; line-height:1.6; }
+
+    .section-label { font-family:'Baloo 2',cursive; font-size:1.2rem; font-weight:900; color:var(--dark); margin-bottom:8px; margin-top:32px; padding-bottom:8px; border-bottom:2.5px solid var(--tan-dark); }
+    .hint-box { background:#fffbe8; border-left:4px solid var(--yellow); padding:11px 16px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin-bottom:20px; color:#6a5200; font-size:0.9rem; line-height:1.6; font-weight:600; }
+    .hint-box strong { color:var(--dark); }
+
+    .q-box  { background:var(--white); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .q-num  { font-size:0.72rem; font-weight:900; color:var(--brown); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
+    .q-text { font-size:1rem; font-weight:700; color:var(--dark); margin-bottom:16px; line-height:1.6; }
+
+    .sentence-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:1rem; font-weight:600; color:var(--dark); line-height:2.2; }
+
+    .blank-input { border:none; border-bottom:2.5px solid var(--teal); padding:4px 10px; font-family:'Nunito',sans-serif; font-size:0.97rem; font-weight:700; color:var(--dark); outline:none; width:140px; background:transparent; text-align:center; transition:border-color 0.2s; }
+    .blank-input:focus         { border-bottom-color:var(--purple); }
+    .blank-input.correct-input { border-color:var(--green); color:var(--green); }
+    .blank-input.wrong-input   { border-color:var(--red);   color:var(--red); }
+    .blank-input:disabled      { cursor:not-allowed; }
+
+    .feedback { margin-top:10px; padding:9px 13px; border-radius:10px; font-weight:700; font-size:0.9rem; display:none; }
+    .feedback.correct-fb { background:#edfaf3; color:#2e7d4f; }
+    .feedback.wrong-fb   { background:#fef0f0; color:var(--red); }
+
+    /* Subject-verb blocks */
+    .sv-block { background:var(--white); border-radius:var(--radius-md); padding:18px 20px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
+    .sv-opts  { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+    .sv-opt   { padding:8px 18px; border:2.5px solid var(--tan-dark); border-radius:30px; font-weight:700; cursor:pointer; font-family:'Nunito',sans-serif; font-size:0.9rem; background:var(--offwhite); transition:all .18s; }
+    .sv-opt:hover    { border-color:var(--orange); color:var(--orange); }
+    .sv-opt.selected { border-color:var(--orange); background:var(--orange); color:#fff; }
+    .sv-opt.correct  { border-color:var(--green);  background:var(--green);  color:#fff; pointer-events:none; }
+    .sv-opt.wrong    { border-color:var(--red);    background:var(--red);    color:#fff; pointer-events:none; }
+    .sv-opt.reveal   { border-color:var(--green);  background:#edfaf3;       color:var(--green); pointer-events:none; }
+
+    .submit-btn { display:block; margin:24px auto 0; padding:13px 40px; border:none; border-radius:40px; font-family:'Nunito',sans-serif; font-weight:800; font-size:1rem; cursor:pointer; transition:all 0.2s; color:#fff; }
+    .submit-btn:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+    .submit-btn.btn-orange { background:var(--orange); }
+
+    .score-panel { background:var(--dark); color:#fff; border-radius:var(--radius-lg); padding:36px 28px; text-align:center; margin-top:36px; display:none; box-shadow:var(--shadow-lg); }
+    .score-stars { font-size:2.4rem; margin-bottom:8px; }
+    .score-big   { font-family:'Baloo 2',cursive; font-size:5rem; font-weight:900; color:var(--yellow); line-height:1; }
+    .score-total { font-size:0.95rem; color:rgba(255,255,255,0.5); margin-bottom:8px; }
+    .score-msg   { font-size:1rem; color:rgba(255,255,255,0.78); margin-bottom:26px; line-height:1.6; }
+    .score-btns  { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+
+    @media (max-width:600px) {
+      .act-header { padding:12px 16px; }
+      .act-title  { font-size:1.15rem; }
+      .act-body   { padding:20px 14px 50px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="gd-nav" id="gd-nav"></nav>
+
+<div class="act-header">
+  <a href="dashboard.html" class="btn-back">← Dashboard</a>
+  <div class="act-header-info">
+    <div class="act-title">📝 Singular &amp; Plural Nouns</div>
+    <div class="act-subtitle">Chapter 1 — Nouns</div>
+  </div>
+  <span class="act-badge" style="background:var(--orange);">3 Exercises</span>
+</div>
+
+<div class="act-body">
+
+  <!-- NOTES -->
+  <div class="notes-box">
+    <h3>📖 Singular &amp; Plural Nouns</h3>
+    <p><strong>Singular noun</strong> refers to <strong>one</strong> person, place, thing or animal.</p>
+    <p style="margin-top:8px;"><strong>Plural noun</strong> refers to <strong>more than one</strong>.</p>
+    <div class="rules-grid">
+      <div class="rule-card"><strong>Most nouns → add -s</strong><p>cat → cats<br>dog → dogs<br>car → cars</p></div>
+      <div class="rule-card"><strong>Ends in -s/-sh/-ch/-x/-z → -es</strong><p>box → boxes<br>brush → brushes<br>dress → dresses</p></div>
+      <div class="rule-card"><strong>Consonant + y → -ies</strong><p>baby → babies<br>lady → ladies<br>party → parties</p></div>
+      <div class="rule-card"><strong>Irregular nouns</strong><p>child → children<br>man → men<br>mouse → mice<br>foot → feet</p></div>
+    </div>
+  </div>
+
+  <!-- EXERCISE 1 -->
+  <div class="section-label">✏️ Exercise 1 — Write the Plural Forms</div>
+  <div class="hint-box">Type the plural form of each noun. Watch out for irregular plurals!</div>
+  <div id="ex1-questions"></div>
+  <button class="submit-btn btn-orange" onclick="checkEx1()">✅ Check Answers</button>
+  <div class="feedback" id="fb-ex1" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- EXERCISE 2 -->
+  <div class="section-label">🔄 Exercise 2 — Write the Singular Forms</div>
+  <div class="hint-box">You are given the plural — write the singular form.</div>
+  <div id="ex2-questions"></div>
+  <button class="submit-btn btn-orange" onclick="checkEx2()">✅ Check Answers</button>
+  <div class="feedback" id="fb-ex2" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
+
+  <div style="height:32px;"></div>
+
+  <!-- EXERCISE 3 -->
+  <div class="section-label">🎯 Exercise 3 — Singular or Plural? (Subject-Verb)</div>
+  <div class="hint-box">
+    Remember: <strong>Single subject → verb + s</strong> (The girl <em>plays</em>). <strong>Plural subject → base verb</strong> (The girls <em>play</em>). Choose the correct words.
+  </div>
+  <div id="ex3-questions"></div>
+  <button class="submit-btn btn-orange" onclick="checkEx3()">✅ Check Answers</button>
+  <div class="feedback" id="fb-ex3" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
+
+  <!-- SCORE PANEL -->
+  <div class="score-panel" id="score-panel">
+    <div class="score-stars" id="sp-stars"></div>
+    <div class="score-big"   id="sp-num">0</div>
+    <div class="score-total" id="sp-total">out of questions</div>
+    <div class="score-msg"   id="sp-msg"></div>
+    <div class="score-btns">
+      <button class="btn btn-yellow" onclick="resetAll()">🔄 Try Again</button>
+      <a href="activity4.html" class="btn btn-blue">Next Activity 🙋 →</a>
+      <a href="dashboard.html" class="btn btn-tan">🏠 Dashboard</a>
+    </div>
+  </div>
+
+</div>
+
+<footer class="gd-footer">© 2024 Grammar Detective · <a href="index.html">Home</a></footer>
+
+<script src="auth.js"></script>
+<script>
+GD.requireAuth(true);
+
+const ex1Data = [
+  {word:'apple',ans:'apples'},{word:'orange',ans:'oranges'},{word:'fish',ans:'fish'},
+  {word:'child',ans:'children'},{word:'woman',ans:'women'},{word:'tooth',ans:'teeth'},
+  {word:'goose',ans:'geese'},{word:'mouse',ans:'mice'},{word:'sheep',ans:'sheep'},
+  {word:'pen',ans:'pens'},{word:'box',ans:'boxes'},{word:'baby',ans:'babies'},{word:'knife',ans:'knives'},
+];
+const ex2Data = [
+  {plural:'Schools',ans:'school'},{plural:'Boxes',ans:'box'},{plural:'Cats',ans:'cat'},
+  {plural:'Candies',ans:'candy'},{plural:'Children',ans:'child'},{plural:'Leaves',ans:'leaf'},
+  {plural:'Cherries',ans:'cherry'},{plural:'Chairs',ans:'chair'},
+];
+const ex3Data = [
+  {before:'The',after2:'cricket.',opts:[['girl','girls'],['plays','play']],ans:['girl','plays'],label:'a)'},
+  {before:'The',after2:'cricket.',opts:[['girl','girls'],['plays','play']],ans:['girls','play'],label:'b)'},
+  {before:'The',after2:'fetch.',opts:[['dog','dogs'],['enjoys','enjoy']],ans:['dog','enjoys'],label:'c)'},
+  {before:'The',after2:'fetch.',opts:[['dog','dogs'],['enjoys','enjoy']],ans:['dogs','enjoy'],label:'d)'},
+  {before:'An', after2:'breadcrumbs.',opts:[['ant','ants'],['carries','carry']],ans:['ant','carries'],label:'e)'},
+  {before:'The',after2:'breadcrumbs.',opts:[['ant','ants'],['carries','carry']],ans:['ants','carry'],label:'f)'},
+];
+let ex3NounSel={}, ex3VerbSel={};
+let doneEx={ex1:false,ex2:false,ex3:false};
+
+function buildEx1() {
+  document.getElementById('fb-ex1').style.display='none';
+  document.getElementById('ex1-questions').innerHTML = ex1Data.map((q,i)=>`
+    <div class="q-box" style="padding:18px 22px;margin-bottom:12px;">
+      <div class="q-num">Question ${i+1}</div>
+      <div class="sentence-row">
+        <strong style="font-size:1.05rem;">${q.word}</strong>
+        <span style="color:var(--beige);font-size:1.1rem;">→</span>
+        <input class="blank-input" id="ex1-${i}" placeholder="plural…" autocomplete="off" />
+      </div>
+    </div>`).join('');
+}
+function checkEx1() {
+  let correct=0;
+  ex1Data.forEach((q,i)=>{
+    const inp=document.getElementById('ex1-'+i);
+    const val=inp.value.trim().toLowerCase();
+    inp.disabled=true;
+    if(val===q.ans){correct++;inp.classList.add('correct-input');inp.value='✅ '+q.ans;}
+    else{inp.classList.add('wrong-input');inp.value='❌ '+(val||'?')+' → '+q.ans;}
+  });
+  const fb=document.getElementById('fb-ex1');
+  fb.style.display='block';
+  fb.className=correct===ex1Data.length?'feedback correct-fb':'feedback wrong-fb';
+  fb.textContent='📊 Exercise 1: '+correct+'/'+ex1Data.length+' correct.';
+  doneEx.ex1=true; checkAllDone();
+}
+
+function buildEx2() {
+  document.getElementById('fb-ex2').style.display='none';
+  document.getElementById('ex2-questions').innerHTML = ex2Data.map((q,i)=>`
+    <div class="q-box" style="padding:18px 22px;margin-bottom:12px;">
+      <div class="q-num">Question ${i+1}</div>
+      <div class="sentence-row">
+        <strong style="font-size:1.05rem;color:var(--brown);">${q.plural}</strong>
+        <span style="color:var(--beige);font-size:1.1rem;">→</span>
+        <input class="blank-input" id="ex2-${i}" placeholder="singular…" autocomplete="off" />
+      </div>
+    </div>`).join('');
+}
+function checkEx2() {
+  let correct=0;
+  ex2Data.forEach((q,i)=>{
+    const inp=document.getElementById('ex2-'+i);
+    const val=inp.value.trim().toLowerCase();
+    inp.disabled=true;
+    if(val===q.ans){correct++;inp.classList.add('correct-input');inp.value='✅ '+q.ans;}
+    else{inp.classList.add('wrong-input');inp.value='❌ '+(val||'?')+' → '+q.ans;}
+  });
+  const fb=document.getElementById('fb-ex2');
+  fb.style.display='block';
+  fb.className=correct===ex2Data.length?'feedback correct-fb':'feedback wrong-fb';
+  fb.textContent='📊 Exercise 2: '+correct+'/'+ex2Data.length+' correct.';
+  doneEx.ex2=true; checkAllDone();
+}
+
+function buildEx3() {
+  ex3NounSel={}; ex3VerbSel={};
+  document.getElementById('fb-ex3').style.display='none';
+  document.getElementById('ex3-questions').innerHTML = ex3Data.map((q,i)=>`
+    <div class="sv-block" id="svb-${i}">
+      <div style="font-weight:700;font-size:0.82rem;color:var(--brown);margin-bottom:6px;">${q.label}</div>
+      <div style="font-size:0.97rem;font-weight:600;margin-bottom:4px;">
+        ${q.before} <span style="color:var(--orange);">[noun]</span> [verb] ${q.after2}
+      </div>
+      <div class="sv-opts">
+        <strong style="font-size:0.8rem;color:var(--brown);align-self:center;">Noun:</strong>
+        ${q.opts[0].map(opt=>`<button class="sv-opt" id="svo-${i}-n-${opt}" onclick="pickSV(${i},'n','${opt}')">${opt}</button>`).join('')}
+        <strong style="font-size:0.8rem;color:var(--brown);align-self:center;margin-left:6px;">Verb:</strong>
+        ${q.opts[1].map(opt=>`<button class="sv-opt" id="svo-${i}-v-${opt}" onclick="pickSV(${i},'v','${opt}')">${opt}</button>`).join('')}
+      </div>
+      <div class="feedback" id="fb3-${i}"></div>
+    </div>`).join('');
+}
+function pickSV(qi,type,val) {
+  if(type==='n'){ex3NounSel[qi]=val;ex3Data[qi].opts[0].forEach(o=>document.getElementById('svo-'+qi+'-n-'+o).classList.toggle('selected',o===val));}
+  else{ex3VerbSel[qi]=val;ex3Data[qi].opts[1].forEach(o=>document.getElementById('svo-'+qi+'-v-'+o).classList.toggle('selected',o===val));}
+}
+function checkEx3() {
+  let correct=0;
+  ex3Data.forEach((q,i)=>{
+    const nC=ex3NounSel[i],vC=ex3VerbSel[i],[nA,vA]=q.ans;
+    const fb=document.getElementById('fb3-'+i);
+    q.opts[0].forEach(o=>{const b=document.getElementById('svo-'+i+'-n-'+o);b.classList.remove('selected');if(o===nA)b.classList.add('reveal');});
+    q.opts[1].forEach(o=>{const b=document.getElementById('svo-'+i+'-v-'+o);b.classList.remove('selected');if(o===vA)b.classList.add('reveal');});
+    if(nC===nA&&vC===vA){
+      correct++;
+      document.getElementById('svo-'+i+'-n-'+nC).classList.replace('reveal','correct');
+      document.getElementById('svo-'+i+'-v-'+vC).classList.replace('reveal','correct');
+      fb.textContent='✅ Correct!';fb.className='feedback correct-fb';fb.style.display='block';
+    } else {
+      if(nC)document.getElementById('svo-'+i+'-n-'+nC).classList.replace('reveal','wrong');
+      if(vC)document.getElementById('svo-'+i+'-v-'+vC).classList.replace('reveal','wrong');
+      fb.textContent='❌ Answer: '+nA+' … '+vA;fb.className='feedback wrong-fb';fb.style.display='block';
+    }
+  });
+  const fb=document.getElementById('fb-ex3');
+  fb.style.display='block';
+  fb.className=correct===ex3Data.length?'feedback correct-fb':'feedback wrong-fb';
+  fb.textContent='📊 Exercise 3: '+correct+'/'+ex3Data.length+' correct.';
+  doneEx.ex3=true; checkAllDone();
+}
+
+function checkAllDone(){if(doneEx.ex1&&doneEx.ex2&&doneEx.ex3)showScore();}
+function showScore(){
+  let correct=0,total=0;
+  ex1Data.forEach((_,i)=>{total++;const inp=document.getElementById('ex1-'+i);if(inp&&inp.classList.contains('correct-input'))correct++;});
+  ex2Data.forEach((_,i)=>{total++;const inp=document.getElementById('ex2-'+i);if(inp&&inp.classList.contains('correct-input'))correct++;});
+  ex3Data.forEach((q,i)=>{total++;if(ex3NounSel[i]===q.ans[0]&&ex3VerbSel[i]===q.ans[1])correct++;});
+  GD.saveActivityScore('act3',correct,total);
+  const pct=correct/total;
+  document.getElementById('sp-stars').textContent=pct>=0.9?'⭐⭐⭐':pct>=0.6?'⭐⭐':'⭐';
+  document.getElementById('sp-num').textContent=correct;
+  document.getElementById('sp-total').textContent='out of '+total+' questions';
+  document.getElementById('sp-msg').textContent=GD.scoreMsg(correct,total);
+  const panel=document.getElementById('score-panel');
+  panel.style.display='block';panel.scrollIntoView({behavior:'smooth'});
+}
+function resetAll(){
+  doneEx={ex1:false,ex2:false,ex3:false};
+  document.getElementById('score-panel').style.display='none';
+  buildEx1();buildEx2();buildEx3();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+buildEx1();buildEx2();buildEx3();
+</script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Detective — Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<nav class="gd-nav" id="gd-nav"></nav>
+
+<div class="auth-wrapper">
+  <div class="auth-box">
+    <div class="auth-logo">Grammar <span class="t">Detective</span> 🔍</div>
+    <p class="auth-sub">Welcome back, Detective! 👋</p>
+
+    <div class="alert alert-error"   id="err-msg"></div>
+    <div class="alert alert-success" id="ok-msg"></div>
+
+    <div class="form-group">
+      <label for="inp-user">Username</label>
+      <input type="text" id="inp-user" placeholder="Enter your username" autocomplete="username" />
+    </div>
+    <div class="form-group">
+      <label for="inp-pass">Password</label>
+      <input type="password" id="inp-pass" placeholder="Enter your password" autocomplete="current-password" />
+    </div>
+
+    <button class="btn-submit" onclick="doLogin()">🔓 Login</button>
+
+    <div class="auth-switch">
+      Don't have an account? <a href="signup.html">Sign Up Free!</a>
+    </div>
+    <div class="auth-switch" style="margin-top:10px;">
+      <a href="index.html" style="color:#bbb;">← Back to Home</a>
+    </div>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+<script>
+  // If already logged in, redirect to dashboard
+  if (GD.getCurrent()) window.location.href = 'dashboard.html';
+
+  function showMsg(id, text) {
+    document.getElementById(id).textContent = text;
+    document.getElementById(id).style.display = 'block';
+  }
+
+  function doLogin() {
+    document.getElementById('err-msg').style.display = 'none';
+    document.getElementById('ok-msg').style.display = 'none';
+
+    const username = document.getElementById('inp-user').value.trim();
+    const password = document.getElementById('inp-pass').value;
+
+    if (!username || !password) {
+      showMsg('err-msg', '⚠️ Please enter your username and password!');
+      return;
+    }
+
+    const users = GD.getUsers();
+    if (!users[username] || users[username].pass !== password) {
+      showMsg('err-msg', '❌ Wrong username or password. Please try again.');
+      return;
+    }
+
+    const user = { username, name: users[username].name, grade: users[username].grade };
+    GD.saveCurrent(user);
+    showMsg('ok-msg', '✅ Login successful! Redirecting...');
+
+    // Redirect to "next" param or dashboard
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get('next') || 'dashboard.html';
+    setTimeout(() => { window.location.href = next; }, 800);
+  }
+
+  // Allow Enter key
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>
