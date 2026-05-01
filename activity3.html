@@ -30,18 +30,6 @@
     .hint-box { background:#fffbe8; border-left:4px solid var(--yellow); padding:11px 16px; border-radius:0 var(--radius-sm) var(--radius-sm) 0; margin-bottom:20px; color:#6a5200; font-size:0.9rem; line-height:1.6; font-weight:600; }
     .hint-box strong { color:var(--dark); }
 
-    .q-box  { background:var(--white); border-radius:var(--radius-md); padding:20px 22px; margin-bottom:14px; box-shadow:var(--shadow-sm); }
-    .q-num  { font-size:0.72rem; font-weight:900; color:var(--brown); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
-    .q-text { font-size:1rem; font-weight:700; color:var(--dark); margin-bottom:16px; line-height:1.6; }
-
-    .sentence-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:1rem; font-weight:600; color:var(--dark); line-height:2.2; }
-
-    .blank-input { border:none; border-bottom:2.5px solid var(--teal); padding:4px 10px; font-family:'Nunito',sans-serif; font-size:0.97rem; font-weight:700; color:var(--dark); outline:none; width:140px; background:transparent; text-align:center; transition:border-color 0.2s; }
-    .blank-input:focus         { border-bottom-color:var(--purple); }
-    .blank-input.correct-input { border-color:var(--green); color:var(--green); }
-    .blank-input.wrong-input   { border-color:var(--red);   color:var(--red); }
-    .blank-input:disabled      { cursor:not-allowed; }
-
     .feedback { margin-top:10px; padding:9px 13px; border-radius:10px; font-weight:700; font-size:0.9rem; display:none; }
     .feedback.correct-fb { background:#edfaf3; color:#2e7d4f; }
     .feedback.wrong-fb   { background:#fef0f0; color:var(--red); }
@@ -84,7 +72,7 @@
     <div class="act-title">📝 Singular &amp; Plural Nouns</div>
     <div class="act-subtitle">Chapter 1 — Nouns</div>
   </div>
-  <span class="act-badge" style="background:var(--orange);">3 Exercises</span>
+  <span class="act-badge" style="background:var(--orange);">1 Exercise</span>
 </div>
 
 <div class="act-body">
@@ -102,26 +90,8 @@
     </div>
   </div>
 
-  <!-- EXERCISE 1 -->
-  <div class="section-label">✏️ Exercise 1 — Write the Plural Forms</div>
-  <div class="hint-box">Type the plural form of each noun. Watch out for irregular plurals!</div>
-  <div id="ex1-questions"></div>
-  <button class="submit-btn btn-orange" onclick="checkEx1()">✅ Check Answers</button>
-  <div class="feedback" id="fb-ex1" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
-
-  <div style="height:32px;"></div>
-
-  <!-- EXERCISE 2 -->
-  <div class="section-label">🔄 Exercise 2 — Write the Singular Forms</div>
-  <div class="hint-box">You are given the plural — write the singular form.</div>
-  <div id="ex2-questions"></div>
-  <button class="submit-btn btn-orange" onclick="checkEx2()">✅ Check Answers</button>
-  <div class="feedback" id="fb-ex2" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
-
-  <div style="height:32px;"></div>
-
   <!-- EXERCISE 3 -->
-  <div class="section-label">🎯 Exercise 3 — Singular or Plural? (Subject-Verb)</div>
+  <div class="section-label">🎯 Exercise — Singular or Plural? (Subject-Verb)</div>
   <div class="hint-box">
     Remember: <strong>Single subject → verb + s</strong> (The girl <em>plays</em>). <strong>Plural subject → base verb</strong> (The girls <em>play</em>). Choose the correct words.
   </div>
@@ -150,17 +120,6 @@
 <script>
 GD.requireAuth(true);
 
-const ex1Data = [
-  {word:'apple',ans:'apples'},{word:'orange',ans:'oranges'},{word:'fish',ans:'fish'},
-  {word:'child',ans:'children'},{word:'woman',ans:'women'},{word:'tooth',ans:'teeth'},
-  {word:'goose',ans:'geese'},{word:'mouse',ans:'mice'},{word:'sheep',ans:'sheep'},
-  {word:'pen',ans:'pens'},{word:'box',ans:'boxes'},{word:'baby',ans:'babies'},{word:'knife',ans:'knives'},
-];
-const ex2Data = [
-  {plural:'Schools',ans:'school'},{plural:'Boxes',ans:'box'},{plural:'Cats',ans:'cat'},
-  {plural:'Candies',ans:'candy'},{plural:'Children',ans:'child'},{plural:'Leaves',ans:'leaf'},
-  {plural:'Cherries',ans:'cherry'},{plural:'Chairs',ans:'chair'},
-];
 const ex3Data = [
   {before:'The',after2:'cricket.',opts:[['girl','girls'],['plays','play']],ans:['girl','plays'],label:'a)'},
   {before:'The',after2:'cricket.',opts:[['girl','girls'],['plays','play']],ans:['girls','play'],label:'b)'},
@@ -170,63 +129,6 @@ const ex3Data = [
   {before:'The',after2:'breadcrumbs.',opts:[['ant','ants'],['carries','carry']],ans:['ants','carry'],label:'f)'},
 ];
 let ex3NounSel={}, ex3VerbSel={};
-let doneEx={ex1:false,ex2:false,ex3:false};
-
-function buildEx1() {
-  document.getElementById('fb-ex1').style.display='none';
-  document.getElementById('ex1-questions').innerHTML = ex1Data.map((q,i)=>`
-    <div class="q-box" style="padding:18px 22px;margin-bottom:12px;">
-      <div class="q-num">Question ${i+1}</div>
-      <div class="sentence-row">
-        <strong style="font-size:1.05rem;">${q.word}</strong>
-        <span style="color:var(--beige);font-size:1.1rem;">→</span>
-        <input class="blank-input" id="ex1-${i}" placeholder="plural…" autocomplete="off" />
-      </div>
-    </div>`).join('');
-}
-function checkEx1() {
-  let correct=0;
-  ex1Data.forEach((q,i)=>{
-    const inp=document.getElementById('ex1-'+i);
-    const val=inp.value.trim().toLowerCase();
-    inp.disabled=true;
-    if(val===q.ans){correct++;inp.classList.add('correct-input');inp.value='✅ '+q.ans;}
-    else{inp.classList.add('wrong-input');inp.value='❌ '+(val||'?')+' → '+q.ans;}
-  });
-  const fb=document.getElementById('fb-ex1');
-  fb.style.display='block';
-  fb.className=correct===ex1Data.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 Exercise 1: '+correct+'/'+ex1Data.length+' correct.';
-  doneEx.ex1=true; checkAllDone();
-}
-
-function buildEx2() {
-  document.getElementById('fb-ex2').style.display='none';
-  document.getElementById('ex2-questions').innerHTML = ex2Data.map((q,i)=>`
-    <div class="q-box" style="padding:18px 22px;margin-bottom:12px;">
-      <div class="q-num">Question ${i+1}</div>
-      <div class="sentence-row">
-        <strong style="font-size:1.05rem;color:var(--brown);">${q.plural}</strong>
-        <span style="color:var(--beige);font-size:1.1rem;">→</span>
-        <input class="blank-input" id="ex2-${i}" placeholder="singular…" autocomplete="off" />
-      </div>
-    </div>`).join('');
-}
-function checkEx2() {
-  let correct=0;
-  ex2Data.forEach((q,i)=>{
-    const inp=document.getElementById('ex2-'+i);
-    const val=inp.value.trim().toLowerCase();
-    inp.disabled=true;
-    if(val===q.ans){correct++;inp.classList.add('correct-input');inp.value='✅ '+q.ans;}
-    else{inp.classList.add('wrong-input');inp.value='❌ '+(val||'?')+' → '+q.ans;}
-  });
-  const fb=document.getElementById('fb-ex2');
-  fb.style.display='block';
-  fb.className=correct===ex2Data.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 Exercise 2: '+correct+'/'+ex2Data.length+' correct.';
-  doneEx.ex2=true; checkAllDone();
-}
 
 function buildEx3() {
   ex3NounSel={}; ex3VerbSel={};
@@ -271,16 +173,12 @@ function checkEx3() {
   const fb=document.getElementById('fb-ex3');
   fb.style.display='block';
   fb.className=correct===ex3Data.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 Exercise 3: '+correct+'/'+ex3Data.length+' correct.';
-  doneEx.ex3=true; checkAllDone();
+  fb.textContent='📊 Exercise: '+correct+'/'+ex3Data.length+' correct.';
+  showScore(correct);
 }
 
-function checkAllDone(){if(doneEx.ex1&&doneEx.ex2&&doneEx.ex3)showScore();}
-function showScore(){
-  let correct=0,total=0;
-  ex1Data.forEach((_,i)=>{total++;const inp=document.getElementById('ex1-'+i);if(inp&&inp.classList.contains('correct-input'))correct++;});
-  ex2Data.forEach((_,i)=>{total++;const inp=document.getElementById('ex2-'+i);if(inp&&inp.classList.contains('correct-input'))correct++;});
-  ex3Data.forEach((q,i)=>{total++;if(ex3NounSel[i]===q.ans[0]&&ex3VerbSel[i]===q.ans[1])correct++;});
+function showScore(correct){
+  const total=ex3Data.length;
   GD.saveActivityScore('act3',correct,total);
   const pct=correct/total;
   document.getElementById('sp-stars').textContent=pct>=0.9?'⭐⭐⭐':pct>=0.6?'⭐⭐':'⭐';
@@ -291,12 +189,11 @@ function showScore(){
   panel.style.display='block';panel.scrollIntoView({behavior:'smooth'});
 }
 function resetAll(){
-  doneEx={ex1:false,ex2:false,ex3:false};
   document.getElementById('score-panel').style.display='none';
-  buildEx1();buildEx2();buildEx3();
+  buildEx3();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-buildEx1();buildEx2();buildEx3();
+buildEx3();
 </script>
 </body>
 </html>

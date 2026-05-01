@@ -34,26 +34,12 @@
     .q-num  { font-size:0.72rem; font-weight:900; color:var(--brown); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:8px; }
     .q-text { font-size:1rem; font-weight:700; color:var(--dark); margin-bottom:16px; line-height:1.6; }
 
-    .sentence-row { display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:1rem; font-weight:600; color:var(--dark); line-height:2.2; }
-
-    .blank-input { border:none; border-bottom:2.5px solid var(--teal); padding:4px 10px; font-family:'Nunito',sans-serif; font-size:0.97rem; font-weight:700; color:var(--dark); outline:none; width:90px; background:transparent; text-align:center; transition:border-color 0.2s; }
-    .blank-input:focus         { border-bottom-color:var(--purple); }
-    .blank-input.correct-input { border-color:var(--green); color:var(--green); }
-    .blank-input.wrong-input   { border-color:var(--red);   color:var(--red); }
-    .blank-input:disabled      { cursor:not-allowed; }
-
-    /* Underline / click-to-select */
     .underline-opt { display:inline-block; padding:6px 14px; border:2.5px solid var(--tan-dark); border-radius:30px; margin:4px 5px 4px 0; font-weight:700; cursor:pointer; font-size:0.92rem; transition:all .18s; background:var(--offwhite); }
     .underline-opt:hover          { border-color:var(--pink); color:var(--pink); }
     .underline-opt.selected       { border-color:var(--pink); background:var(--pink); color:#fff; }
     .underline-opt.correct        { border-color:var(--green); background:var(--green); color:#fff; pointer-events:none; }
     .underline-opt.wrong          { border-color:var(--red);   background:var(--red);   color:#fff; pointer-events:none; }
     .underline-opt.reveal-correct { border-color:var(--green); background:#edfaf3;      color:var(--green); pointer-events:none; }
-
-    /* Word bank */
-    .word-bank { background:var(--tan); border:2px dashed var(--beige); border-radius:var(--radius-md); padding:14px 16px; margin-bottom:20px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-    .word-bank-label { font-size:0.75rem; font-weight:900; color:var(--brown); text-transform:uppercase; letter-spacing:1px; width:100%; margin-bottom:2px; }
-    .wb-word { background:var(--brown); color:#fff; padding:6px 16px; border-radius:30px; font-weight:700; font-size:0.88rem; }
 
     .feedback { margin-top:10px; padding:9px 13px; border-radius:10px; font-weight:700; font-size:0.9rem; display:none; }
     .feedback.correct-fb { background:#edfaf3; color:#2e7d4f; }
@@ -87,7 +73,7 @@
     <div class="act-title">🏆 Possessive Adjectives</div>
     <div class="act-subtitle">Chapter 3 — Adjectives</div>
   </div>
-  <span class="act-badge" style="background:var(--pink);">3 Exercises</span>
+  <span class="act-badge" style="background:var(--pink);">1 Exercise</span>
 </div>
 
 <div class="act-body">
@@ -108,31 +94,12 @@
     </table>
   </div>
 
-  <!-- EXERCISE 1 -->
-  <div class="section-label">✏️ Exercise 1 — Fill in the Blank</div>
-  <div class="hint-box">Fill in the blanks with the correct possessive adjective. The subject pronoun is given as a hint!</div>
-  <div id="ex1-questions"></div>
-  <button class="submit-btn btn-pink" onclick="checkEx1()">✅ Check Answers</button>
-  <div class="feedback" id="fb-ex1" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
-
-  <div style="height:32px;"></div>
-
   <!-- EXERCISE 2 -->
-  <div class="section-label">🔍 Exercise 2 — Underline the Correct Word</div>
+  <div class="section-label">🔍 Exercise — Underline the Correct Word</div>
   <div class="hint-box">Click the correct possessive adjective in each sentence.</div>
   <div id="ex2-questions"></div>
   <button class="submit-btn btn-pink" onclick="checkEx2()">✅ Check Answers</button>
   <div class="feedback" id="fb-ex2" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
-
-  <div style="height:32px;"></div>
-
-  <!-- EXERCISE 3 -->
-  <div class="section-label">🖊️ Exercise 3 — Fill from the Word Bank</div>
-  <div class="hint-box">Choose the best possessive adjective from the word bank to complete each sentence.</div>
-  <div class="word-bank" id="wb-ex3"></div>
-  <div id="ex3-questions"></div>
-  <button class="submit-btn btn-pink" onclick="checkEx3()">✅ Check Answers</button>
-  <div class="feedback" id="fb-ex3" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
 
   <!-- SCORE PANEL -->
   <div class="score-panel" id="score-panel">
@@ -154,15 +121,6 @@
 <script>
 GD.requireAuth(true);
 
-const ex1Data = [
-  {sentence:'This is ___ bag.',hint:'(I)',ans:'my'},
-  {sentence:'Is that ___ lunch?',hint:'(you)',ans:'your'},
-  {sentence:'She is playing with ___ friends.',hint:'(she)',ans:'her'},
-  {sentence:'The dog is wagging ___ tail.',hint:'(it)',ans:'its'},
-  {sentence:'We are going to ___ playground.',hint:'(we)',ans:'our'},
-  {sentence:'They are riding ___ bikes.',hint:'(they)',ans:'their'},
-  {sentence:'He forgot ___ homework.',hint:'(he)',ans:'his'},
-];
 const ex2Data = [
   {before:'I have a cat. It is (',opts:['my','your'],ans:'my',after:') cat.'},
   {before:'This is Mrs Rossie. The little girl is (',opts:['his','her'],ans:'her',after:') daughter.'},
@@ -170,141 +128,72 @@ const ex2Data = [
   {before:'Alvin has a dog. It is (',opts:['his','her'],ans:'his',after:') dog.'},
   {before:'Lisa has a teddy bear. She is playing with (',opts:['his','her'],ans:'her',after:') teddy bear.'},
 ];
-let ex2Sel={};
-const ex3Data = [
-  {sentence:'Amanda has a sister. ___ name is Alisya.',ans:'HER'},
-  {sentence:'We love swimming. Swimming is ___ hobby.',ans:'OUR'},
-  {sentence:'You need to go back. ___ mommy is calling.',ans:'YOUR'},
-  {sentence:'The tiger is hurt. ___ tail is bleeding.',ans:'ITS'},
-  {sentence:'Tommy and Ben are siblings. ___ parents are kind.',ans:'THEIR'},
-  {sentence:'This is John. ___ favourite color is blue.',ans:'HIS'},
-  {sentence:'She is a teacher. ___ students are good.',ans:'HER'},
-  {sentence:'I have many friends. ___ friends are the best!',ans:'MY'},
-];
-const ex3Words=['HER','MY','YOUR','HIS','THEIR','OUR','ITS'];
-let doneEx={ex1:false,ex2:false,ex3:false};
-
-function buildEx1() {
-  document.getElementById('fb-ex1').style.display='none';
-  document.getElementById('ex1-questions').innerHTML = ex1Data.map((q,i)=>`
-    <div class="q-box" style="margin-bottom:12px;">
-      <div class="q-num">Question ${i+1}</div>
-      <div class="sentence-row">
-        ${q.sentence.replace('___',`<input class="blank-input" id="ex1-${i}" placeholder="${q.hint}" autocomplete="off" />`)}
-        <span style="color:var(--beige-lt);font-size:0.82rem;">${q.hint}</span>
-      </div>
-    </div>`).join('');
-}
-function checkEx1() {
-  let correct=0;
-  ex1Data.forEach((q,i)=>{
-    const inp=document.getElementById('ex1-'+i);
-    const val=inp.value.trim().toLowerCase();
-    inp.disabled=true;
-    if(val===q.ans){correct++;inp.classList.add('correct-input');inp.value='✅ '+q.ans;}
-    else{inp.classList.add('wrong-input');inp.value='❌ '+(val||'?')+' → '+q.ans;}
-  });
-  const fb=document.getElementById('fb-ex1');
-  fb.style.display='block';
-  fb.className=correct===ex1Data.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 Exercise 1: '+correct+'/'+ex1Data.length+' correct.';
-  doneEx.ex1=true; checkAllDone();
-}
+let ex2Sel = {};
 
 function buildEx2() {
-  ex2Sel={};
-  document.getElementById('fb-ex2').style.display='none';
-  document.getElementById('ex2-questions').innerHTML = ex2Data.map((q,i)=>`
+  ex2Sel = {};
+  document.getElementById('fb-ex2').style.display = 'none';
+  document.getElementById('ex2-questions').innerHTML = ex2Data.map((q, i) => `
     <div class="q-box" id="qb2-${i}" style="margin-bottom:12px;">
-      <div class="q-num">Question ${i+1}</div>
+      <div class="q-num">Question ${i + 1} of ${ex2Data.length}</div>
       <div class="q-text">${q.before}
-        ${q.opts.map(opt=>`<span class="underline-opt" id="ul-${i}-${opt}" onclick="pickUL(${i},'${opt}')">${opt}</span>`).join(' / ')}
+        ${q.opts.map(opt => `<span class="underline-opt" id="ul-${i}-${opt}" onclick="pickUL(${i},'${opt}')">${opt}</span>`).join(' / ')}
       ${q.after}</div>
       <div class="feedback" id="fbu-${i}"></div>
     </div>`).join('');
 }
-function pickUL(qi,val) {
-  ex2Sel[qi]=val;
-  ex2Data[qi].opts.forEach(o=>document.getElementById('ul-'+qi+'-'+o).classList.toggle('selected',o===val));
+
+function pickUL(qi, val) {
+  ex2Sel[qi] = val;
+  ex2Data[qi].opts.forEach(o => document.getElementById('ul-' + qi + '-' + o).classList.toggle('selected', o === val));
 }
+
 function checkEx2() {
-  let correct=0;
-  ex2Data.forEach((q,i)=>{
-    const chosen=ex2Sel[i];
-    const fb=document.getElementById('fbu-'+i);
-    q.opts.forEach(o=>{
-      const b=document.getElementById('ul-'+i+'-'+o);
+  let correct = 0;
+  ex2Data.forEach((q, i) => {
+    const chosen = ex2Sel[i];
+    const fb = document.getElementById('fbu-' + i);
+    q.opts.forEach(o => {
+      const b = document.getElementById('ul-' + i + '-' + o);
       b.classList.remove('selected');
-      if(o===q.ans)b.classList.add('reveal-correct');
+      if (o === q.ans) b.classList.add('reveal-correct');
     });
-    if(chosen===q.ans){
+    if (chosen === q.ans) {
       correct++;
-      document.getElementById('ul-'+i+'-'+chosen).classList.replace('reveal-correct','correct');
-      fb.textContent='✅ Correct!';fb.className='feedback correct-fb';fb.style.display='block';
+      document.getElementById('ul-' + i + '-' + chosen).classList.replace('reveal-correct', 'correct');
+      fb.textContent = '✅ Correct!'; fb.className = 'feedback correct-fb'; fb.style.display = 'block';
     } else {
-      if(chosen)document.getElementById('ul-'+i+'-'+chosen).classList.replace('reveal-correct','wrong');
-      fb.textContent=chosen?`❌ Answer: "${q.ans}"`:'❌ Not answered.';
-      fb.className='feedback wrong-fb';fb.style.display='block';
+      if (chosen) document.getElementById('ul-' + i + '-' + chosen).classList.replace('reveal-correct', 'wrong');
+      fb.textContent = chosen ? `❌ Answer: "${q.ans}"` : '❌ Not answered.';
+      fb.className = 'feedback wrong-fb'; fb.style.display = 'block';
     }
   });
-  const fb=document.getElementById('fb-ex2');
-  fb.style.display='block';
-  fb.className=correct===ex2Data.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 Exercise 2: '+correct+'/'+ex2Data.length+' correct.';
-  doneEx.ex2=true; checkAllDone();
+  const fb = document.getElementById('fb-ex2');
+  fb.style.display = 'block';
+  fb.className = correct === ex2Data.length ? 'feedback correct-fb' : 'feedback wrong-fb';
+  fb.textContent = '📊 ' + correct + '/' + ex2Data.length + ' correct.';
+  showScore(correct);
 }
 
-function buildEx3() {
-  document.getElementById('fb-ex3').style.display='none';
-  document.getElementById('wb-ex3').innerHTML=
-    '<div class="word-bank-label">Word Bank:</div>'+
-    ex3Words.map(w=>`<span class="wb-word">${w}</span>`).join('');
-  document.getElementById('ex3-questions').innerHTML = ex3Data.map((q,i)=>`
-    <div class="q-box" style="margin-bottom:12px;">
-      <div class="q-num">Question ${i+1}</div>
-      <div class="sentence-row">
-        ${q.sentence.replace('___',`<input class="blank-input" id="ex3-${i}" placeholder="type…" autocomplete="off" style="text-transform:lowercase;" />`)}
-      </div>
-    </div>`).join('');
-}
-function checkEx3() {
-  let correct=0;
-  ex3Data.forEach((q,i)=>{
-    const inp=document.getElementById('ex3-'+i);
-    const val=inp.value.trim().toUpperCase();
-    inp.disabled=true;
-    if(val===q.ans){correct++;inp.classList.add('correct-input');inp.value='✅ '+q.ans.toLowerCase();}
-    else{inp.classList.add('wrong-input');inp.value='❌ '+(inp.value||'?')+' → '+q.ans.toLowerCase();}
-  });
-  const fb=document.getElementById('fb-ex3');
-  fb.style.display='block';
-  fb.className=correct===ex3Data.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 Exercise 3: '+correct+'/'+ex3Data.length+' correct.';
-  doneEx.ex3=true; checkAllDone();
+function showScore(correct) {
+  const total = ex2Data.length;
+  GD.saveActivityScore('act5', correct, total);
+  const pct = correct / total;
+  document.getElementById('sp-stars').textContent = pct >= 0.9 ? '⭐⭐⭐' : pct >= 0.6 ? '⭐⭐' : '⭐';
+  document.getElementById('sp-num').textContent = correct;
+  document.getElementById('sp-total').textContent = 'out of ' + total + ' questions';
+  document.getElementById('sp-msg').textContent = GD.scoreMsg(correct, total);
+  const panel = document.getElementById('score-panel');
+  panel.style.display = 'block'; panel.scrollIntoView({ behavior: 'smooth' });
 }
 
-function checkAllDone(){if(doneEx.ex1&&doneEx.ex2&&doneEx.ex3)showScore();}
-function showScore(){
-  let correct=0,total=0;
-  ex1Data.forEach((_,i)=>{total++;const inp=document.getElementById('ex1-'+i);if(inp&&inp.classList.contains('correct-input'))correct++;});
-  ex2Data.forEach((q,i)=>{total++;if(ex2Sel[i]===q.ans)correct++;});
-  ex3Data.forEach((_,i)=>{total++;const inp=document.getElementById('ex3-'+i);if(inp&&inp.classList.contains('correct-input'))correct++;});
-  GD.saveActivityScore('act5',correct,total);
-  const pct=correct/total;
-  document.getElementById('sp-stars').textContent=pct>=0.9?'⭐⭐⭐':pct>=0.6?'⭐⭐':'⭐';
-  document.getElementById('sp-num').textContent=correct;
-  document.getElementById('sp-total').textContent='out of '+total+' questions';
-  document.getElementById('sp-msg').textContent=GD.scoreMsg(correct,total);
-  const panel=document.getElementById('score-panel');
-  panel.style.display='block';panel.scrollIntoView({behavior:'smooth'});
+function resetAll() {
+  document.getElementById('score-panel').style.display = 'none';
+  buildEx2();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-function resetAll(){
-  doneEx={ex1:false,ex2:false,ex3:false};
-  document.getElementById('score-panel').style.display='none';
-  buildEx1();buildEx2();buildEx3();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-buildEx1();buildEx2();buildEx3();
+
+buildEx2();
 </script>
 </body>
 </html>

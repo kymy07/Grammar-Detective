@@ -77,7 +77,7 @@
     <div class="act-title">🙋 Personal Pronouns</div>
     <div class="act-subtitle">Chapter 2 — Pronouns</div>
   </div>
-  <span class="act-badge" style="background:var(--blue);">3 Exercises</span>
+  <span class="act-badge" style="background:var(--blue);">1 Exercise</span>
 </div>
 
 <div class="act-body">
@@ -104,29 +104,11 @@
   </div>
 
   <!-- EXERCISE 1 -->
-  <div class="section-label">✏️ Exercise 1 — He, She or It?</div>
+  <div class="section-label">✏️ Exercise — He, She or It?</div>
   <div class="hint-box">Use <strong>He</strong> for a boy · <strong>She</strong> for a girl · <strong>It</strong> for a thing or animal.</div>
   <div id="ex1-questions"></div>
   <button class="submit-btn btn-blue" onclick="checkEx1()">✅ Check Answers</button>
   <div class="feedback" id="fb-ex1" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
-
-  <div style="height:32px;"></div>
-
-  <!-- EXERCISE 2 -->
-  <div class="section-label">🔍 Exercise 2 — Identify the Pronoun</div>
-  <div class="hint-box">Each sentence needs a personal pronoun. Click the correct one!</div>
-  <div id="ex2-questions"></div>
-  <button class="submit-btn btn-blue" onclick="checkEx2()">✅ Check Answers</button>
-  <div class="feedback" id="fb-ex2" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
-
-  <div style="height:32px;"></div>
-
-  <!-- EXERCISE 3 -->
-  <div class="section-label">🖊️ Exercise 3 — Fill in the Pronoun</div>
-  <div class="hint-box">Choose the correct subject or object pronoun to complete each sentence.</div>
-  <div id="ex3-questions"></div>
-  <button class="submit-btn btn-blue" onclick="checkEx3()">✅ Check Answers</button>
-  <div class="feedback" id="fb-ex3" style="margin-top:14px;padding:14px;border-radius:12px;"></div>
 
   <!-- SCORE PANEL -->
   <div class="score-panel" id="score-panel">
@@ -154,29 +136,8 @@ const ex1Data = [
   {subject:'🧥 A jacket',ans:'It'},{subject:'📚 A book',ans:'It'},{subject:'😢 A sad boy',ans:'He'},
   {subject:'👟 A shoe',ans:'It'},{subject:'👶 A baby (girl)',ans:'She'},{subject:'📖 Someone reading',ans:'He'},
 ];
-const ex2Data = [
-  {sentence:'___ am excited.',opts:['I','You','He','We'],ans:'I'},
-  {sentence:'___ are my classmate.',opts:['I','You','She','They'],ans:'You'},
-  {sentence:'___ is handsome.',opts:['She','He','It','We'],ans:'He'},
-  {sentence:'___ is friendly.',opts:['He','She','It','They'],ans:'She'},
-  {sentence:'___ is a cute kitten.',opts:['He','She','It','We'],ans:'It'},
-  {sentence:'___ are a great team.',opts:['I','He','We','They'],ans:'We'},
-  {sentence:'___ are awesome.',opts:['I','She','We','They'],ans:'They'},
-  {sentence:'What do ___ want?',opts:['I','you','he','she'],ans:'you'},
-];
-const ex3Data = [
-  {sentence:'I love ___. (my cat → her)',opts:['her','him','it','them'],ans:'her'},
-  {sentence:'She gave ___ a gift. (me)',opts:['I','me','my','we'],ans:'me'},
-  {sentence:'The dog is barking at ___.',opts:['he','him','his','her'],ans:'him'},
-  {sentence:'I painted ___. (this picture)',opts:['it','its','him','her'],ans:'it'},
-  {sentence:'The teacher gave ___ a lollipop.',opts:['we','us','our','they'],ans:'us'},
-  {sentence:'Oh, we were looking for ___!',opts:['you','your','yours','he'],ans:'you'},
-  {sentence:'Khalid is helping ___ clean.',opts:['they','them','their','it'],ans:'them'},
-  {sentence:'I am sending ___ a new dress.',opts:['she','her','hers','he'],ans:'her'},
-];
 
-let ex1Sel={}, ex2Sel={}, ex3Sel={};
-let doneEx={ex1:false,ex2:false,ex3:false};
+let ex1Sel={};
 
 function buildEx1() {
   ex1Sel={};
@@ -186,86 +147,50 @@ function buildEx1() {
       <div class="q-num">Question ${i+1} of ${ex1Data.length}</div>
       <div class="q-text">${q.subject} — which pronoun?</div>
       <div class="q-options" style="grid-template-columns:repeat(3,1fr);max-width:360px;">
-        ${['He','She','It'].map(opt=>`<button class="q-opt" id="ex1-${i}-${opt}" onclick="pickQ(ex1Sel,${i},'${opt}','ex1')">${opt}</button>`).join('')}
+        ${['He','She','It'].map(opt=>`<button class="q-opt" id="ex1-${i}-${opt}" onclick="pickQ(${i},'${opt}')">${opt}</button>`).join('')}
       </div>
       <div class="feedback" id="fb1-${i}"></div>
     </div>`).join('');
 }
-function buildEx2() {
-  ex2Sel={};
-  document.getElementById('fb-ex2').style.display='none';
-  document.getElementById('ex2-questions').innerHTML = ex2Data.map((q,i)=>`
-    <div class="q-box" id="qb2-${i}">
-      <div class="q-num">Question ${i+1} of ${ex2Data.length}</div>
-      <div class="q-text">${q.sentence}</div>
-      <div class="q-options">
-        ${q.opts.map(opt=>`<button class="q-opt" id="ex2-${i}-${opt}" onclick="pickQ(ex2Sel,${i},'${opt}','ex2')">${opt}</button>`).join('')}
-      </div>
-      <div class="feedback" id="fb2-${i}"></div>
-    </div>`).join('');
-}
-function buildEx3() {
-  ex3Sel={};
-  document.getElementById('fb-ex3').style.display='none';
-  document.getElementById('ex3-questions').innerHTML = ex3Data.map((q,i)=>`
-    <div class="q-box" id="qb3-${i}">
-      <div class="q-num">Question ${i+1} of ${ex3Data.length}</div>
-      <div class="q-text">${q.sentence}</div>
-      <div class="q-options">
-        ${q.opts.map(opt=>`<button class="q-opt" id="ex3-${i}-${opt}" onclick="pickQ(ex3Sel,${i},'${opt}','ex3')">${opt}</button>`).join('')}
-      </div>
-      <div class="feedback" id="fb3-${i}"></div>
-    </div>`).join('');
+
+function pickQ(qi,val) {
+  ex1Sel[qi]=val;
+  ['He','She','It'].forEach(o=>{const b=document.getElementById('ex1-'+qi+'-'+o);if(b)b.classList.toggle('selected',o===val);});
 }
 
-function pickQ(selObj,qi,val,prefix) {
-  let data,allOpts;
-  if(prefix==='ex1'){data=ex1Data[qi];allOpts=['He','She','It'];ex1Sel[qi]=val;}
-  if(prefix==='ex2'){data=ex2Data[qi];allOpts=data.opts;ex2Sel[qi]=val;}
-  if(prefix==='ex3'){data=ex3Data[qi];allOpts=data.opts;ex3Sel[qi]=val;}
-  allOpts.forEach(o=>{const b=document.getElementById(prefix+'-'+qi+'-'+o);if(b)b.classList.toggle('selected',o===val);});
-}
-
-function checkExercise(exData,exSel,prefix,fbId,done) {
+function checkEx1(){
   let correct=0;
-  exData.forEach((q,i)=>{
-    const chosen=exSel[i];
+  ex1Data.forEach((q,i)=>{
+    const chosen=ex1Sel[i];
     const ans=q.ans;
-    const allOpts=prefix==='ex1'?['He','She','It']:q.opts;
-    const fb=document.getElementById('fb'+prefix.slice(-1)+'-'+i);
+    const allOpts=['He','She','It'];
+    const fb=document.getElementById('fb1-'+i);
     allOpts.forEach(o=>{
-      const b=document.getElementById(prefix+'-'+i+'-'+o);
+      const b=document.getElementById('ex1-'+i+'-'+o);
       if(!b)return;
       b.classList.remove('selected');
       if(o===ans)b.classList.add('reveal-correct');
     });
     if(chosen===ans){
       correct++;
-      const wb=document.getElementById(prefix+'-'+i+'-'+chosen);
+      const wb=document.getElementById('ex1-'+i+'-'+chosen);
       if(wb){wb.classList.remove('reveal-correct');wb.classList.add('correct');}
       fb.textContent='✅ Correct!';fb.className='feedback correct-fb';fb.style.display='block';
     } else {
-      if(chosen){const wb=document.getElementById(prefix+'-'+i+'-'+chosen);if(wb){wb.classList.remove('reveal-correct');wb.classList.add('wrong');}}
+      if(chosen){const wb=document.getElementById('ex1-'+i+'-'+chosen);if(wb){wb.classList.remove('reveal-correct');wb.classList.add('wrong');}}
       fb.textContent=chosen?`❌ Answer: "${ans}"`:'❌ Not answered.';
       fb.className='feedback wrong-fb';fb.style.display='block';
     }
   });
-  const fb=document.getElementById(fbId);
+  const fb=document.getElementById('fb-ex1');
   fb.style.display='block';
-  fb.className=correct===exData.length?'feedback correct-fb':'feedback wrong-fb';
-  fb.textContent='📊 '+correct+'/'+exData.length+' correct.';
-  done();
+  fb.className=correct===ex1Data.length?'feedback correct-fb':'feedback wrong-fb';
+  fb.textContent='📊 '+correct+'/'+ex1Data.length+' correct.';
+  showScore(correct);
 }
 
-function checkEx1(){checkExercise(ex1Data,ex1Sel,'ex1','fb-ex1',()=>{doneEx.ex1=true;checkAllDone();});}
-function checkEx2(){checkExercise(ex2Data,ex2Sel,'ex2','fb-ex2',()=>{doneEx.ex2=true;checkAllDone();});}
-function checkEx3(){checkExercise(ex3Data,ex3Sel,'ex3','fb-ex3',()=>{doneEx.ex3=true;checkAllDone();});}
-
-function checkAllDone(){if(doneEx.ex1&&doneEx.ex2&&doneEx.ex3)showScore();}
-function showScore(){
-  let correct=0,total=0;
-  const tally=(exData,exSel)=>exData.forEach((q,i)=>{total++;if(exSel[i]===q.ans)correct++;});
-  tally(ex1Data,ex1Sel);tally(ex2Data,ex2Sel);tally(ex3Data,ex3Sel);
+function showScore(correct){
+  const total=ex1Data.length;
   GD.saveActivityScore('act4',correct,total);
   const pct=correct/total;
   document.getElementById('sp-stars').textContent=pct>=0.9?'⭐⭐⭐':pct>=0.6?'⭐⭐':'⭐';
@@ -275,13 +200,14 @@ function showScore(){
   const panel=document.getElementById('score-panel');
   panel.style.display='block';panel.scrollIntoView({behavior:'smooth'});
 }
+
 function resetAll(){
-  doneEx={ex1:false,ex2:false,ex3:false};
   document.getElementById('score-panel').style.display='none';
-  buildEx1();buildEx2();buildEx3();
+  buildEx1();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-buildEx1();buildEx2();buildEx3();
+
+buildEx1();
 </script>
 </body>
 </html>
