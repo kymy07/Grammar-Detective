@@ -49,6 +49,18 @@
     }
     .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; position: relative; z-index: 1; }
 
+    /* ---- Ghost button fix ---- */
+    .btn-ghost {
+      background: rgba(255,255,255,0.08) !important;
+      border: 2px solid rgba(255,255,255,0.7) !important;
+      color: #ffffff !important;
+      backdrop-filter: blur(4px);
+    }
+    .btn-ghost:hover {
+      background: rgba(255,255,255,0.18) !important;
+      border-color: #ffffff !important;
+    }
+
     /* ---- Scroll ticker ---- */
     .ticker { background: var(--yellow); padding: 13px 0; overflow: hidden; }
     .ticker-inner {
@@ -178,7 +190,7 @@
     <div class="credit-card">
       <div class="cr-role">Exercise Book Author</div>
       <div class="cr-name">Farah Wahida binti Mohd Zaini</div>
-      <div class="cr-detail">Grammar Detective Activity Book · Ages 9–10</div>
+      <div class="cr-detail">Universiti Teknologi MARA (UiTM)</div>
     </div>
   </div>
   <div class="age-pill">📚 Grammar Detective · Ages 9–10</div>
